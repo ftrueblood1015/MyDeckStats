@@ -1,0 +1,68 @@
+﻿<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All">
+        <MudIcon Icon="@Icons.Material.Outlined.Speed" Title="Dashboard" />
+        Dashboard
+    </MudNavLink>
+    <MudNavLink Href="/cards" Match="NavLinkMatch.All">
+        <MudIcon Icon="@Icons.Material.Outlined.CardMembership" Title="Cards" />
+        Cards
+    </MudNavLink>
+    <MudNavLink Href="/decks" Match="NavLinkMatch.All">
+        <MudIcon Icon="@Icons.Material.Outlined.Deck" Title="Decks" />
+        Decks
+    </MudNavLink>
+    <AuthorizeView Roles="Admin">
+        <MudNavGroup Title="Card Options" Expanded="false">
+            <MudNavLink Href="/mtgsets" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.Collections" Title="Sets" />
+                Sets
+            </MudNavLink>
+            <MudNavLink Href="/cardtypes" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.TypeSpecimen" Title="Card Types" />
+                Card Types
+            </MudNavLink>
+            <MudNavLink Href="/coloridentities" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.FormatColorText" Title="Color Identities" />
+                Color Identities
+            </MudNavLink>
+            <MudNavLink Href="/rarities" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.CollectionsBookmark" Title="Rarities" />
+                Rarities
+            </MudNavLink>
+            <MudNavLink Href="/cardpurposes" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.DataUsage" Title="Puroses" />
+                Puroses
+            </MudNavLink>
+        </MudNavGroup>
+        <MudNavGroup Title="Deck Options" Expanded="false">
+            <MudNavLink Href="/themes" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.ColorLens" Title="Themes" />
+                Themes
+            </MudNavLink>
+            <MudNavLink Href="/guilds" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.Group" Title="Guilds" />
+                Guilds
+            </MudNavLink>
+            <MudNavLink Href="/formats" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.FormatAlignCenter" Title="Formats" />
+                Formats
+            </MudNavLink>
+        </MudNavGroup>
+    </AuthorizeView>
+    <AuthorizeView Roles="SuperUser">
+        <MudNavGroup Title="User Options" Expanded="false">
+            <MudNavLink Href="/users" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.VerifiedUser" Title="users" />
+                Users
+            </MudNavLink>
+            <MudNavLink Href="/roles" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.CameraRoll" Title="Roles" />
+                Roles
+            </MudNavLink>
+            <MudNavLink Href="/userroles" Match="NavLinkMatch.All">
+                <MudIcon Icon="@Icons.Material.Outlined.CameraRoll" Title="user Roles" />
+                User Roles
+            </MudNavLink>
+        </MudNavGroup>
+    </AuthorizeView>
+</MudNavMenu>
