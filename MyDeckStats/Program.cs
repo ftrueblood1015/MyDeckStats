@@ -50,11 +50,11 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 
-// InjectPatternFromAssemblies(builder, "Repository");
-// InjectPatternFromAssemblies(builder, "Service");
+InjectPatternFromAssemblies(builder, "Repository");
+InjectPatternFromAssemblies(builder, "Service");
 
-builder.Services.AddTransient<IUserRepository<IdentityUser>, UserRepository>();
-builder.Services.AddTransient<IUserService<IdentityUser>, UserService>();
+// builder.Services.AddTransient<IUserRepository<IdentityUser>, UserRepository>();
+// builder.Services.AddTransient<IUserService<IdentityUser>, UserService>();
 
 var app = builder.Build();
 
