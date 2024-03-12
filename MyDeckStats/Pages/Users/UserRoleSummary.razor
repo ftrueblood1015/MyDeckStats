@@ -1,0 +1,32 @@
+﻿@page "/userroles"
+
+@using Microsoft.AspNetCore.Identity;
+
+<AuthorizeView Roles="SuperUser" Context="AuthorizedContext">
+    <Authorized>
+        <MudText @attributes='Splats.PageHeader("UserRoles")'>User Role Summary</MudText>
+
+        <MudDataGrid @attributes='Splats.DataGrid("UserRoleSummary")' T="IdentityUserRole<string>" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+                     Filterable="true" QuickFilter="@_quickFilter">
+            <ToolBarContent>
+                <MudSpacer />
+                <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
+                <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => Add(DetailRoute))">Add</MudButton>
+            </ToolBarContent>
+            <Columns>
+                <PropertyColumn Property="x => x.RoleId" Title="Name" Sortable="false" Filterable="false" />
+                <PropertyColumn Property="x => GetUserById(x.UserId)" />
+                <TemplateColumn CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudStack Row>
+                            <MudButton @attributes="Splats.DeleteButton()" Size="@Size.Small" OnClick="@(() => OnDeleteClicked(context.Item))">Delete</MudButton>
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="IdentityUserRole<string>" />
+            </PagerContent>
+        </MudDataGrid>
+    </Authorized>
+</AuthorizeView>

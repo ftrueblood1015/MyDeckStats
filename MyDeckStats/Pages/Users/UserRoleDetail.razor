@@ -1,0 +1,41 @@
+﻿@page "/userroledetail"
+
+<AuthorizeView Roles="SuperUser">
+    <Authorized>
+        <MudText @attributes='Splats.PageHeader("UserRoleDetail")'>User Role Detail</MudText>
+
+        <MudForm @ref="Form" @bind-IsValid="@success">
+            <MudPaper Class="pa-4">
+                <MudGrid>
+                        <MudItem xs="6" md="6" lg="6">
+                            <MudSelect @attributes='Splats.SelectRequired("user")' T="string?" Label="Users" @bind-Value="@Entity.UserId">
+                                @if (Users != null)
+                                {
+                                    @foreach (var entity in Users)
+                                    {
+                                        <MudSelectItem T="string?" Value="@entity.Id">@entity.UserName</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="6" md="6" lg="6">
+                            <MudSelect @attributes='Splats.SelectRequired("role")' T="string?" Label="Roles" @bind-Value="@Entity.RoleId">
+                                @if (Roles != null)
+                                {
+                                    @foreach (var entity in Roles)
+                                    {
+                                        <MudSelectItem T="string?" Value="@entity.Id">@entity.Name</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </MudItem>
+                </MudGrid>
+            </MudPaper>
+            <MudPaper Class="pa-4">
+                <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Create(Entity!))">Save</MudButton>
+                <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
+                <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("userroles"))">Cancel</MudButton>
+            </MudPaper>
+        </MudForm>
+    </Authorized>
+</AuthorizeView>
