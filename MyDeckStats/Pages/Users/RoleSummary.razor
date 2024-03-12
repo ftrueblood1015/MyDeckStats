@@ -2,28 +2,32 @@
 
 @using Microsoft.AspNetCore.Identity;
 
-<MudText @attributes='Splats.PageHeader("Roles")'>Role Summary</MudText>
+<AuthorizeView Roles="SuperUser" Context="AuthorizedContext">
+    <Authorized>
+        <MudText @attributes='Splats.PageHeader("Roles")'>Role Summary</MudText>
 
-<MudDataGrid @attributes='Splats.DataGrid("RoleSummary")' T="IdentityRole" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
-             Filterable="true" QuickFilter="@_quickFilter">
-    <ToolBarContent>
-        <MudSpacer />
-        <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
-        <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => Add(DetailRoute))">Add</MudButton>
-    </ToolBarContent>
-    <Columns>
-        <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
-        <PropertyColumn Property="x => x.NormalizedName" />
-        <PropertyColumn Property="x => x.ConcurrencyStamp" />
-        <TemplateColumn CellClass="d-flex justify-end">
-            <CellTemplate>
-                <MudStack Row>
-                    <MudButton @attributes="Splats.DeleteButton()" Size="@Size.Small" OnClick="@(() => OnDeleteClicked(context.Item))">Delete</MudButton>
-                </MudStack>
-            </CellTemplate>
-        </TemplateColumn>
-    </Columns>
-    <PagerContent>
-        <MudDataGridPager T="IdentityRole" />
-    </PagerContent>
-</MudDataGrid>
+        <MudDataGrid @attributes='Splats.DataGrid("RoleSummary")' T="IdentityRole" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+                     Filterable="true" QuickFilter="@_quickFilter">
+            <ToolBarContent>
+                <MudSpacer />
+                <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
+                <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => Add(DetailRoute))">Add</MudButton>
+            </ToolBarContent>
+            <Columns>
+                <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
+                <PropertyColumn Property="x => x.NormalizedName" />
+                <PropertyColumn Property="x => x.ConcurrencyStamp" />
+                <TemplateColumn CellClass="d-flex justify-end">
+                    <CellTemplate>
+                        <MudStack Row>
+                            <MudButton @attributes="Splats.DeleteButton()" Size="@Size.Small" OnClick="@(() => OnDeleteClicked(context.Item))">Delete</MudButton>
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="IdentityRole" />
+            </PagerContent>
+        </MudDataGrid>
+    </Authorized>
+</AuthorizeView>

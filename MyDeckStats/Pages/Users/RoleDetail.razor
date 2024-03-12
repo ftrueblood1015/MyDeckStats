@@ -1,21 +1,25 @@
 ﻿@page "/roledetail"
 @page "/roledetail/{EntityId}"
 
-<MudText @attributes='Splats.PageHeader("RoleDetail")'>Role Detail</MudText>
+<AuthorizeView Roles="SuperUser">
+    <Authorized>
+        <MudText @attributes='Splats.PageHeader("RoleDetail")'>Role Detail</MudText>
 
-<MudForm @ref="Form" @bind-IsValid="@success">
-    <MudPaper Class="pa-4">
-        <MudGrid>
-            <MudItem xs="12" md="12" lg="12">
-                <MudItem xs="12" md="12" lg="12">
-                    <MudTextField @bind-Value="Entity!.Name" @attributes="@Splats.TextRequired(nameof(Entity.Name))" For="@(() => Entity!.Name)" />
-                </MudItem>
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-    <MudPaper Class="pa-4">
-        <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "roles"))">Save</MudButton>
-        <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
-        <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("roles"))">Cancel</MudButton>
-    </MudPaper>
-</MudForm>
+        <MudForm @ref="Form" @bind-IsValid="@success">
+            <MudPaper Class="pa-4">
+                <MudGrid>
+                    <MudItem xs="12" md="12" lg="12">
+                        <MudItem xs="12" md="12" lg="12">
+                            <MudTextField @bind-Value="Entity!.Name" @attributes="@Splats.TextRequired(nameof(Entity.Name))" For="@(() => Entity!.Name)" />
+                        </MudItem>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+            <MudPaper Class="pa-4">
+                <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "roles"))">Save</MudButton>
+                <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
+                <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("roles"))">Cancel</MudButton>
+            </MudPaper>
+        </MudForm>
+    </Authorized>
+</AuthorizeView>

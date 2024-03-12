@@ -69,7 +69,7 @@ namespace MyDeckStats.Pages.Users
             }
             catch (Exception ex)
             {
-                ShowSnackbarMessage($"Failed to update {role.Name}", Color.Error);
+                ShowSnackbarMessage($"Failed to delete {role.Name}", Color.Error);
             }
             await GetData();
             StateHasChanged();

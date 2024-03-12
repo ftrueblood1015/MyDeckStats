@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using MyDeckStats.Areas.Identity;
 using MyDeckStats.Data;
@@ -10,10 +7,6 @@ using MudBlazor;
 using MudBlazor.Services;
 using NetCore.AutoRegisterDi;
 using System.Reflection;
-using MyDeckStats.Domain.Interfaces.Repositories.Users;
-using MyDeckStats.Repositories.Users;
-using MyDeckStats.Domain.Interfaces.Services.Users;
-using MyDeckStats.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,9 +45,6 @@ builder.Services.AddMudServices(config =>
 
 InjectPatternFromAssemblies(builder, "Repository");
 InjectPatternFromAssemblies(builder, "Service");
-
-// builder.Services.AddTransient<IUserRepository<IdentityUser>, UserRepository>();
-// builder.Services.AddTransient<IUserService<IdentityUser>, UserService>();
 
 var app = builder.Build();
 
