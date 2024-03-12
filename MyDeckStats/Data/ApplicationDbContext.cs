@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MyDeckStats.Domain.Entities.Mtg.Cards;
 
 namespace MyDeckStats.Data
 {
@@ -9,5 +10,7 @@ namespace MyDeckStats.Data
             : base(options)
         {
         }
+
+        DbSet<MtgSet> MtgSets => Set<MtgSet>();
     }
 }

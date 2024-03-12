@@ -7,6 +7,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using NetCore.AutoRegisterDi;
 using System.Reflection;
+using MyDeckStats.Services.Scryfall;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,13 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
 builder.Services.AddSingleton<WeatherForecastService>();
+
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+var config = new ConfigurationBuilder().AddJsonFile($"appsettings.{env}.json").AddEnvironmentVariables().Build();
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(config.GetValue<string>("AppBaseUrl")!) });
+builder.Services.AddScoped(sp => new ScryfallApiServerClient(new HttpClient { BaseAddress = new Uri(config.GetValue<string>("ScryfallApiServerBaseUrl")!) }));
+
 
 builder.Services.AddMudServices(config =>
 {

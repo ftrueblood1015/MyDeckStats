@@ -1,0 +1,38 @@
+﻿@page "/mtgsets"
+
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Shared;
+
+@inherits SummaryPageBase<MtgSet>;
+
+<AuthorizeView Context="AuthorizedContext">
+    <MudText @attributes='Splats.PageHeader("MtgSetSummary")'>Mtg Set Summary</MudText>
+
+    <MudDataGrid @attributes='Splats.DataGrid("MtgSetSummary")' T="MtgSet" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+             Filterable="true" QuickFilter="@_quickFilter">
+        <ToolBarContent>
+            <MudSpacer />
+            <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
+            <AuthorizeView Roles="SuperUser" Context="AuthorizedContextInner">
+                <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => UpdateScryfallAll())">Scryfall Update</MudButton>
+            </AuthorizeView>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
+            <PropertyColumn Property="x => x.ReleasedAt" />
+            <PropertyColumn Property="x => x.CardCount" />
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                        <AuthorizeView Roles="Admin, SuperUser" Context="AuthorizedContextInner">
+                            <MudButton @attributes="Splats.ResetButton()" Size="@Size.Small" OnClick="@(() => UpdateScryfallById())">Update</MudButton>
+                        </AuthorizeView>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="MtgSet" />
+        </PagerContent>
+    </MudDataGrid>
+</AuthorizeView>
