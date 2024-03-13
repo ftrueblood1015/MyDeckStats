@@ -3,20 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyDeckStats.Data;
 
 #nullable disable
 
-namespace MyDeckStats.Data.Migrations
+namespace MyDeckStats.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240312184327_MtgSets")]
-    partial class MtgSets
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,11 +226,9 @@ namespace MyDeckStats.Data.Migrations
 
             modelBuilder.Entity("MyDeckStats.Domain.Entities.Mtg.Cards.MtgSet", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CardCount")
                         .HasColumnType("int");
@@ -264,10 +259,6 @@ namespace MyDeckStats.Data.Migrations
 
                     b.Property<DateTime>("ReleasedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ScryfallId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ScryfallUri")
                         .HasColumnType("nvarchar(max)");

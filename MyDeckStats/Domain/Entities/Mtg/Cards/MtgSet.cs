@@ -1,6 +1,6 @@
 ﻿namespace MyDeckStats.Domain.Entities.Mtg.Cards
 {
-    public class MtgSet : ScryFallImportBase
+    public class MtgSet : EntityBase
     {
         public string? Code { get; set; }
 

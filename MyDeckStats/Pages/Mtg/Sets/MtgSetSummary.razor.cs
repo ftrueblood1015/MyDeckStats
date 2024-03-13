@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MyDeckStats.Data.Migrations;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Interfaces.Services.Scryfall;
 using MyDeckStats.Domain.Models;
@@ -20,9 +19,6 @@ namespace MyDeckStats.Pages.Mtg.Sets
                 return true;
 
             if (x.Name!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-                return true;
-
-            if (x.Description!.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
             return false;
@@ -50,7 +46,7 @@ namespace MyDeckStats.Pages.Mtg.Sets
                 throw new Exception($"{nameof(Service)}  is null!");
             }
 
-            var response = Service.Filter(x => x.ScryfallId == set.Id).FirstOrDefault();
+            var response = Service.GetById(set.Id);
 
             if (response == null)
             {

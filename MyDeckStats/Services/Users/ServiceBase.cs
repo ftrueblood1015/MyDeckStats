@@ -39,7 +39,7 @@ namespace MyDeckStats.Services.Users
             }
         }
 
-        public virtual bool DeleteById(int entityId)
+        public virtual bool DeleteById(Guid entityId)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace MyDeckStats.Services.Users
             }
         }
 
-        public virtual T? GetById(int id)
+        public virtual T? GetById(Guid id)
         {
             try
             {

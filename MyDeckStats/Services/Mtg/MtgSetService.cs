@@ -11,17 +11,5 @@ namespace MyDeckStats.Services.Mtg
         public MtgSetService(IMtgSetRepository repo) : base(repo)
         {
         }
-
-        public MtgSet? GetByScryfallId(string id)
-        {
-            try
-            {
-                return Repo.Filter(x => x.ScryfallId == id).FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
     }
 }

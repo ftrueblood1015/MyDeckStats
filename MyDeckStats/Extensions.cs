@@ -16,7 +16,7 @@ namespace MyDeckStats
         {
             return new MtgSet()
             {
-                ScryfallId = scryFallMtgSet.Id,
+                Id = scryFallMtgSet.Id,
                 Code = scryFallMtgSet.Code,
                 Name = scryFallMtgSet.Name,
                 Uri = scryFallMtgSet.Uri,
@@ -35,7 +35,7 @@ namespace MyDeckStats
 
         public static MtgSet MapScryFallOnto(this MtgSet mtgSet, ScryfallMtgSet scryFallMtgSet)
         {
-            mtgSet.ScryfallId = scryFallMtgSet.Id;
+            mtgSet.Id = scryFallMtgSet.Id;
             mtgSet.Code = scryFallMtgSet.Code;
             mtgSet.Name = scryFallMtgSet.Name;
             mtgSet.Uri = scryFallMtgSet.Uri;
@@ -93,7 +93,7 @@ namespace MyDeckStats
                 var newSet = new ScryfallMtgSet()
                 {
                     Object = token["object"]?.ToString(),
-                    Id = token["id"]?.ToString(),
+                    Id = new Guid(token["id"]?.ToString()!),
                     Code = token["code"]?.ToString(),
                     Name = token["name"]?.ToString(),
                     Uri = token["uri"]?.ToString(),

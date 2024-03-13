@@ -17,6 +17,11 @@ namespace MyDeckStats.Repositories
 
         public virtual T Add(T entity)
         {
+            if (entity.Id == null)
+            {
+                entity.Id = Guid.NewGuid();
+            }
+
             Context.Add(entity);
             Context.SaveChanges();
 
@@ -31,7 +36,7 @@ namespace MyDeckStats.Repositories
             return results > 0;
         }
 
-        public bool DeleteById(int entityId)
+        public bool DeleteById(Guid entityId)
         {
             var entity = GetById(entityId);
 
@@ -51,7 +56,7 @@ namespace MyDeckStats.Repositories
             return Context.Set<T>();
         }
 
-        public virtual T? GetById(int id)
+        public virtual T? GetById(Guid id)
         {
             return Context.Set<T>().FirstOrDefault(x => x.Id == id);
         }

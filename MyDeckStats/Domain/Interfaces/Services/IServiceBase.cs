@@ -9,13 +9,13 @@ namespace MyDeckStats.Domain.Interfaces.Services
 
         bool Delete(T entity);
 
-        bool DeleteById(int entityId);
+        bool DeleteById(Guid entityId);
 
         IEnumerable<T> Filter(Func<T, bool> predicate);
 
         IEnumerable<T> GetAll();
 
-        T? GetById(int id);
+        T? GetById(Guid id);
 
         T Update(T entity);
     }

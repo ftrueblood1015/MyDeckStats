@@ -9,10 +9,5 @@ namespace MyDeckStats.Repositories.Mtg
         public MtgSetRepository(ApplicationDbContext context) : base(context)
         {
         }
-
-        public MtgSet? GetByScryfallId(string id)
-        {
-            return Context.Set<MtgSet>().FirstOrDefault(x => x.ScryfallId == id);
-        }
     }
 }
