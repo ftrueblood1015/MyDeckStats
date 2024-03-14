@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MyDeckStats.Domain.Interfaces.Services.Scryfall;
+﻿using MyDeckStats.Domain.Interfaces.Services.Scryfall;
 using MyDeckStats.Domain.Models;
 
 namespace MyDeckStats.Services.Scryfall

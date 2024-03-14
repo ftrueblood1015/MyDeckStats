@@ -1,0 +1,62 @@
+﻿@page "/mtgsetdetail/{EntityId}"
+
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Shared;
+
+@inherits DetailPageBase<MtgSet>;
+
+<AuthorizeView>
+
+    <MudText @attributes='Splats.PageHeader("MtgSetDetail")'>Mtg Set Detail</MudText>
+
+    <MudForm @ref="Form" @bind-IsValid="@success">
+        <MudPaper Class="pa-4">
+            <MudGrid>
+                <MudItem xs="12" md="12" lg="12">
+                    <MudTextField @bind-Value="Entity!.Name" @attributes="@Splats.TextOptional(nameof(Entity.Name))" For="@(() => Entity!.Name)" ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudTextField @bind-Value="Entity!.Code" @attributes="@Splats.TextOptional(nameof(Entity.Code))" For="@(() => Entity!.Code)" ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudTextField @bind-Value="Entity!.SetType" @attributes="@Splats.TextOptional(nameof(Entity.SetType))" For="@(() => Entity!.SetType)" ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudDatePicker Date="Entity!.ReleasedAt" @attributes="@Splats.DatePicker(nameof(Entity.ReleasedAt))" ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudNumericField @bind-Value="@Entity!.CardCount" @attributes='Splats.NumericRequired("CardCount")' ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="4" lg="4">
+                    <MudCheckBox @bind-Value="Entity!.FoilOnly" @attributes="@Splats.CheckBox(nameof(Entity.FoilOnly))" For="@(() => Entity!.FoilOnly)" ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="4" lg="4">
+                    <MudCheckBox @bind-Value="Entity!.NonfoilOnly" @attributes="@Splats.CheckBox(nameof(Entity.NonfoilOnly))" For="@(() => Entity!.NonfoilOnly)" ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="4" lg="4">
+                    <MudCheckBox @bind-Value="Entity!.Digital" @attributes="@Splats.CheckBox(nameof(Entity.Digital))" For="@(() => Entity!.Digital)" ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="3" lg="3">
+                    <MudLink Href="@Entity.ScryfallUri">Scryfall Uri</MudLink>
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="3" lg="3">
+                    <MudLink Href="@Entity.IconSvgUri">Icon Uri</MudLink>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        <MudPaper Class="pa-4">
+            <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("mtgsets"))">Cancel</MudButton>
+        </MudPaper>
+    </MudForm>
+
+</AuthorizeView>

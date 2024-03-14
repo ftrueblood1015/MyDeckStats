@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using MyDeckStats.Domain.Entities.Mtg.Cards;
+﻿using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Models;
 using MyDeckStats.Services.Scryfall;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Drawing.Drawing2D;
-using System.Globalization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyDeckStats
 {

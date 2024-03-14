@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Identity;
+using MyDeckStats.Commands.Navigation;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Interfaces.Services.Scryfall;
 using MyDeckStats.Domain.Models;
@@ -11,7 +13,10 @@ namespace MyDeckStats.Pages.Mtg.Sets
         [Inject]
         private IScryfallMtgSetService<ScryfallMtgSet> ScryfallMtgSetService { get; set; }
 
-        private string DetailRoute = "mtgset";
+        [Inject]
+        private NavigationManager? NavigationManager { get; set; }
+
+        private string DetailRoute = "mtgsetdetail";
 
         public override Func<MtgSet, bool> _quickFilter => x =>
         {
@@ -62,9 +67,10 @@ namespace MyDeckStats.Pages.Mtg.Sets
             }
         }
 
-        private async Task UpdateScryfallById()
+        public void View(MtgSet set, string route)
         {
-         
+            var navCommand = new NavigationCommand(NavigationManager!, $"/{route}/{set.Id}", false);
+            navCommand.Execute();
         }
     }
 }

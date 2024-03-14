@@ -41,7 +41,7 @@ namespace MyDeckStats.Shared
                 { "id", $"checkbox_{label.ToLower()}" },
                 { "Label", label },
                 { "Color", MudBlazor.Color.Primary },
-                { "LabelPosition", MudBlazor.LabelPosition.Start },
+                { "LabelPosition", MudBlazor.LabelPosition.End },
                 { "Required", true },
             };
 
@@ -214,6 +214,19 @@ namespace MyDeckStats.Shared
             return attributes;
         }
 
+        public static Dictionary<string, object> TextOptional(string label)
+        {
+            Dictionary<string, object> attributes = new ()
+            {
+                { "id", $"text_{GenerateId(label)}" },
+                { "Variant", Variant.Outlined },
+                { "Required", false },
+                { "Label", label },
+            };
+
+            return attributes;
+        }
+
         public static Dictionary<string, object> TextRequired(string label)
         {
             Dictionary<string, object> attributes = new ()
@@ -239,6 +252,19 @@ namespace MyDeckStats.Shared
                 { "RequiredError", $"{label} is required." },
                 { "Label", label },
                 { "Lines", 3 },
+            };
+
+            return attributes;
+        }
+
+        public static Dictionary<string, object> ViewButton()
+        {
+            Dictionary<string, object> attributes = new ()
+            {
+                { "id", $"button_reset" },
+                { "Variant",MudBlazor.Variant.Filled },
+                { "Color", MudBlazor.Color.Primary },
+                { "StartIcon", MudBlazor.Icons.Material.Filled.ViewComfy },
             };
 
             return attributes;
