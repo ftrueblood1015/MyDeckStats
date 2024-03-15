@@ -50,7 +50,7 @@ namespace MyDeckStats.Services.Scryfall
 
         public async Task<bool> ImportFromFile()
         {
-            string FilePath = "C:\\Users\\ftrue\\source\\repos\\MyDeckStats\\MyDeckStats\\BulkCards\\BulkTest.json";
+            string FilePath = "BulkTest.json";
 
             return await Import(FilePath);
         }
