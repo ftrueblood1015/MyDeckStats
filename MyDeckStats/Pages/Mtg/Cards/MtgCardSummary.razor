@@ -1,0 +1,38 @@
+﻿@page "/mtgcards"
+
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Shared;
+
+@inherits SummaryPageBase<MtgCard>;
+
+<AuthorizeView Context="AuthorizedContext">
+    <MudText @attributes='Splats.PageHeader("MtgCardSummary")'>Mtg Card Summary</MudText>
+
+    <MudDataGrid @attributes='Splats.DataGrid("MtgCardSummary")' T="MtgCard" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+                 Filterable="true" QuickFilter="@_quickFilter">
+        <ToolBarContent>
+            <MudSpacer />
+            <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
+            <AuthorizeView Roles="SuperUser" Context="AuthorizedContextInner">
+                <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => UpdateScryfallAll())">Scryfall Update</MudButton>
+            </AuthorizeView>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
+            <PropertyColumn Property="x => x.Type" />
+            <PropertyColumn Property="x => x.ConvertedManaCost" Title="CMC"  />
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                        <AuthorizeView Roles="Admin, SuperUser" Context="AuthorizedContextInner">
+                            <MudButton @attributes="Splats.ViewButton()" Size="@Size.Small" OnClick="@(() => View(context.Item, DetailRoute))">View</MudButton>
+                        </AuthorizeView>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="MtgCard" />
+        </PagerContent>
+    </MudDataGrid>
+</AuthorizeView>
