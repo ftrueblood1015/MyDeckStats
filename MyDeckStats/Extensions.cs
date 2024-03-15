@@ -172,5 +172,24 @@ namespace MyDeckStats
                     return value ?? throw new ArgumentNullException(nameof(value));
             }
         }
+
+        public static bool CompareToScryfall(this MtgCard mtgCard, ScryfallMtgCard scryfallMtgCard)
+        {
+            return (
+                mtgCard.Description == scryfallMtgCard.Name &&
+                mtgCard.Description == scryfallMtgCard.Name &&
+                mtgCard.ScryfallUri == scryfallMtgCard.scryfall_uri &&
+                mtgCard.ColorIdentity == String.Join(",", scryfallMtgCard.color_identity!) &&
+                mtgCard.manaCost == scryfallMtgCard.mana_cost &&
+                mtgCard.ConvertedManaCost == (int)Math.Round(scryfallMtgCard.cmc) &&
+                mtgCard.Type == scryfallMtgCard.type_line &&
+                mtgCard.OracleText == scryfallMtgCard.oracle_text &&
+                mtgCard.Power == (int.TryParse(scryfallMtgCard.power, out int x) ? x : 0) &&
+                mtgCard.Toughness == (int.TryParse(scryfallMtgCard.toughness, out int y) ? y : 0) &&
+                mtgCard.Rarity == scryfallMtgCard.rarity &&
+                mtgCard.EdhrecRank == scryfallMtgCard.edhrec_rank &&
+                mtgCard.ProducesMana == (scryfallMtgCard.produced_mana != null ? true : false)
+            );
+        }
     }
 }

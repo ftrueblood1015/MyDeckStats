@@ -2,10 +2,6 @@
 using MyDeckStats.Domain.Interfaces.Services.Scryfall;
 using MyDeckStats.Domain.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Security.Policy;
 
 namespace MyDeckStats.Services.Scryfall
 {
@@ -22,8 +18,7 @@ namespace MyDeckStats.Services.Scryfall
 
         public async Task<bool> DownloadFileAndImport()
         {
-            var url = new Uri("bulk-data/oracle-cards", UriKind.Relative);
-            var downloadData = await ScryfallClient.GetData<OracleCardsDownload>(url);
+            var downloadData = await GetDownloadUri();
 
             try
             {
@@ -73,16 +68,19 @@ namespace MyDeckStats.Services.Scryfall
 
                 cards!.ForEach(delegate (ScryfallMtgCard card)
                 {
-                    var ExistingCard = MtgCardService.Filter(x => x.OracleId == new Guid(card.oracle_id!)).FirstOrDefault();
+                    var Exists = MtgCardService.Filter(x => x.OracleId == new Guid(card.oracle_id!)).Count();
 
-                    if (ExistingCard == null)
+                    if (Exists == 0)
                     {
                         MtgCardService.Add(card.ScryfallTransform());
                     }
                     else
                     {
-                        var GetCard = MtgCardService.GetById(new Guid(card.Id!));
-                        MtgCardService.Update(GetCard!.MapScryFallOnto(card));
+                        var ExistingCard = MtgCardService.GetById(new Guid(card.Id!));
+                        if (!ExistingCard!.CompareToScryfall(card))
+                        {
+                            MtgCardService.Update(ExistingCard!.MapScryFallOnto(card));
+                        }
                     }
 
                 });
@@ -93,6 +91,13 @@ namespace MyDeckStats.Services.Scryfall
             {
                 throw new Exception($"Error: {ex}", ex);
             }
+        }
+
+        public async Task<OracleCardsDownload> GetDownloadUri()
+        {
+            var url = new Uri("bulk-data/oracle-cards", UriKind.Relative);
+            var downloadData = await ScryfallClient.GetData<OracleCardsDownload>(url);
+            return downloadData;
         }
     }
 }

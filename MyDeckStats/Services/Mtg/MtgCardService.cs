@@ -8,7 +8,7 @@ namespace MyDeckStats.Services.Mtg
 {
     public class MtgCardService : ServiceBase<MtgCard, IMtgCardRepository>, IMtgCardService
     {
-        public MtgCardService(IRepositoryBase<MtgCard> repo) : base(repo)
+        public MtgCardService(IMtgCardRepository repo) : base(repo)
         {
         }
     }
