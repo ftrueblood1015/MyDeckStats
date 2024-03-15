@@ -48,11 +48,6 @@
                     <MudLink Href="@Entity.ScryfallUri">Scryfall Uri</MudLink>
                 </MudItem>
             </MudGrid>
-            <MudGrid>
-                <MudItem xs="12" md="3" lg="3">
-                    <MudLink Href="@Entity.IconSvgUri">Icon Uri</MudLink>
-                </MudItem>
-            </MudGrid>
         </MudPaper>
         <MudPaper Class="pa-4">
             <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("mtgsets"))">Cancel</MudButton>
