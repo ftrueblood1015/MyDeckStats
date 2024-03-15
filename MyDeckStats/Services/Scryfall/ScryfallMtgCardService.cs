@@ -2,6 +2,10 @@
 using MyDeckStats.Domain.Interfaces.Services.Scryfall;
 using MyDeckStats.Domain.Models;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Security.Policy;
 
 namespace MyDeckStats.Services.Scryfall
 {
@@ -16,20 +20,58 @@ namespace MyDeckStats.Services.Scryfall
             MtgCardService = mtgCardService;
         }
 
-        public Task<bool> ImportFromFile()
+        public async Task<bool> DownloadFileAndImport()
+        {
+            var url = new Uri("bulk-data/oracle-cards", UriKind.Relative);
+            var downloadData = await ScryfallClient.GetData<OracleCardsDownload>(url);
+
+            try
+            {
+                using (HttpResponseMessage response = await ScryfallClient.Client.GetAsync(downloadData.download_uri))
+                using (Stream contentStream = await response.Content.ReadAsStreamAsync())
+                {
+                    using (FileStream fileStream = File.Create("oracle_cards.json"))
+                    {
+                        await contentStream.CopyToAsync(fileStream);
+                    }
+                }
+
+                var result = await Import("oracle_cards.json");
+
+                if (result)
+                {
+                    File.Delete("oracle_cards.json");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error downloading Oracle cards: {ex.Message}");
+            }
+
+            return await Task.FromResult(true);
+        }
+
+        public async Task<bool> ImportFromFile()
         {
             string FilePath = "C:\\Users\\ftrue\\source\\repos\\MyDeckStats\\MyDeckStats\\BulkCards\\BulkTest.json";
 
-            if (!File.Exists(FilePath))
+            return await Import(FilePath);
+        }
+
+        public Task<bool> Import(string filePath)
+        {
+            if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException("File not found", FilePath);
+                throw new FileNotFoundException("File not found", filePath);
             }
 
             try
             {
-                var cards = JsonConvert.DeserializeObject<List<ScryfallMtgCard>>(File.ReadAllText(FilePath));
+                var cards = JsonConvert.DeserializeObject<List<ScryfallMtgCard>>(File.ReadAllText(filePath));
 
-                cards!.ForEach(delegate(ScryfallMtgCard card)
+                cards!.ForEach(delegate (ScryfallMtgCard card)
                 {
                     var ExistingCard = MtgCardService.Filter(x => x.OracleId == new Guid(card.oracle_id!)).FirstOrDefault();
 
@@ -42,7 +84,7 @@ namespace MyDeckStats.Services.Scryfall
                         var GetCard = MtgCardService.GetById(new Guid(card.Id!));
                         MtgCardService.Update(GetCard!.MapScryFallOnto(card));
                     }
-                    
+
                 });
 
                 return Task.FromResult(true);

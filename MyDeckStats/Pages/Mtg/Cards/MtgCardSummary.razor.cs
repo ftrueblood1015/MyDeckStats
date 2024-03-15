@@ -35,7 +35,7 @@ namespace MyDeckStats.Pages.Mtg.Cards
                 throw new Exception($"{nameof(ScryfallMtgCardService)} is null");
             }
 
-            var result = ScryfallMtgCardService.ImportFromFile();
+            var result = ScryfallMtgCardService.DownloadFileAndImport();
 
             if (result.IsCompletedSuccessfully)
             {

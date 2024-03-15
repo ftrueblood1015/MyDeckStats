@@ -4,5 +4,6 @@
         where T : class
     {
         Task<bool> ImportFromFile();
+        Task<bool> DownloadFileAndImport();
     }
 }
