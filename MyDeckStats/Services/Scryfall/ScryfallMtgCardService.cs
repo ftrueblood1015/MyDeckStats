@@ -25,17 +25,17 @@ namespace MyDeckStats.Services.Scryfall
                 using (HttpResponseMessage response = await ScryfallClient.Client.GetAsync(downloadData.download_uri))
                 using (Stream contentStream = await response.Content.ReadAsStreamAsync())
                 {
-                    using (FileStream fileStream = File.Create("oracle_cards.json"))
+                    using (FileStream fileStream = File.Create(SiteConstants.ScryfallDownloadFile))
                     {
                         await contentStream.CopyToAsync(fileStream);
                     }
                 }
 
-                var result = await Import("oracle_cards.json");
+                var result = await Import(SiteConstants.ScryfallDownloadFile);
 
                 if (result)
                 {
-                    File.Delete("oracle_cards.json");
+                    File.Delete(SiteConstants.ScryfallDownloadFile);
                 }
 
                 return result;
@@ -50,7 +50,7 @@ namespace MyDeckStats.Services.Scryfall
 
         public async Task<bool> ImportFromFile()
         {
-            string FilePath = "BulkTest.json";
+            string FilePath = SiteConstants.ScryfallTestFile;
 
             return await Import(FilePath);
         }
@@ -95,7 +95,7 @@ namespace MyDeckStats.Services.Scryfall
 
         public async Task<OracleCardsDownload> GetDownloadUri()
         {
-            var url = new Uri("bulk-data/oracle-cards", UriKind.Relative);
+            var url = new Uri(SiteConstants.ScryfallBulkDownLoadUrl, UriKind.Relative);
             var downloadData = await ScryfallClient.GetData<OracleCardsDownload>(url);
             return downloadData;
         }

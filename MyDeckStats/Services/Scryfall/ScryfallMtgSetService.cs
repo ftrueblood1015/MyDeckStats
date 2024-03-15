@@ -14,7 +14,7 @@ namespace MyDeckStats.Services.Scryfall
 
         public async Task<IEnumerable<ScryfallMtgSet>?> GetAll()
         {
-            var url = new Uri("sets", UriKind.Relative);
+            var url = new Uri(SiteConstants.ScryfallSetUrl, UriKind.Relative);
             var result = await ScryfallClient.GetScryfallSetData<IEnumerable<ScryfallMtgSet>>(url);
             return result;
         }
