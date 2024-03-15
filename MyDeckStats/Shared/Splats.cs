@@ -104,6 +104,19 @@ namespace MyDeckStats.Shared
             return attributes;
         }
 
+        public static Dictionary<string, object> GenericButton(Color color, string icon, string label)
+        {
+            Dictionary<string, object> attributes = new ()
+            {
+                { "id", $"button_generic_{label}" },
+                { "Variant", Variant.Filled },
+                { "Color", color },
+                { "StartIcon", icon },
+            };
+
+            return attributes;
+        }
+
         public static string GenerateId(string label)
         {
             return label.ToLower(CultureInfo.CurrentCulture);

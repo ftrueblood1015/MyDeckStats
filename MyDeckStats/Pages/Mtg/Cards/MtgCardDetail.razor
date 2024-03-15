@@ -1,0 +1,64 @@
+﻿@page "/mtgcarddetail/{EntityId}"
+
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Shared;
+
+@inherits DetailPageBase<MtgCard>;
+
+<AuthorizeView>
+
+    <MudForm @ref="Form" @bind-IsValid="@success">
+        <MudPaper Class="pa-4">
+            <MudGrid>
+                <MudItem xs="12" md="8" lg="8">
+                    <MudTextField @bind-Value="Entity!.Name" @attributes="@Splats.TextOptional(nameof(Entity.Name))" For="@(() => Entity!.Name)" ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="4" lg="4">
+                    <MudTextField @bind-Value="Entity!.Rarity" @attributes="@Splats.TextOptional(nameof(Entity.Rarity))" For="@(() => Entity!.Rarity)" ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudTextField @bind-Value="Entity!.ColorIdentity" @attributes="@Splats.TextOptional(nameof(Entity.ColorIdentity))" For="@(() => Entity!.ColorIdentity)" ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudTextField @bind-Value="Entity!.Type" @attributes="@Splats.TextOptional(nameof(Entity.Type))" For="@(() => Entity!.Type)" ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudTextField @bind-Value="Entity!.manaCost" @attributes="@Splats.TextOptional(nameof(Entity.manaCost))" For="@(() => Entity!.manaCost)" ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudNumericField @bind-Value="@Entity!.ConvertedManaCost" @attributes='Splats.NumericRequired("ConvertedManaCost")' ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudNumericField @bind-Value="@Entity!.Power" @attributes='Splats.NumericRequired("Power")' ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudNumericField @bind-Value="@Entity!.Toughness" @attributes='Splats.NumericRequired("Toughness")' ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudNumericField @bind-Value="@Entity!.EdhrecRank" @attributes='Splats.NumericRequired("EdhrecRank")' ReadOnly="IsReadOnly" />
+                </MudItem>
+                <MudItem xs="12" md="6" lg="6">
+                    <MudNumericField @bind-Value="@Entity!.PennyRank" @attributes='Splats.NumericRequired("PennyRank")' ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="12" md="12" lg="12">
+                    <MudTextField @bind-Value="Entity!.OracleText" @attributes="@Splats.TextAreaRequired(nameof(Entity.OracleText))" For="@(() => Entity!.OracleText)" ReadOnly="IsReadOnly" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        <MudPaper Class="pa-4">
+            <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("mtgcards"))">Cancel</MudButton>
+            <MudButton Href="@Entity!.ScryfallUri" @attributes='Splats.GenericButton(Color.Primary, Icons.Material.Filled.CardMembership, "scryfalllink")'>Scryfall</MudButton>
+        </MudPaper>
+    </MudForm>
+
+</AuthorizeView>
