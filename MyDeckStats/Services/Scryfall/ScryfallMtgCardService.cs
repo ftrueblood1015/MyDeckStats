@@ -68,17 +68,17 @@ namespace MyDeckStats.Services.Scryfall
 
                 cards!.ForEach(delegate (ScryfallMtgCard card)
                 {
-                    var Exists = MtgCardService.Filter(x => x.OracleId == new Guid(card.oracle_id!)).Count();
+                    var Exists = MtgCardService.GetById(new Guid(card.oracle_id!));
 
-                    if (Exists == 0)
+                    if (Exists == null)
                     {
                         MtgCardService.Add(card.ScryfallTransform());
                     }
                     else
                     {
-                        var ExistingCard = MtgCardService.GetById(new Guid(card.Id!));
-                        if (!ExistingCard!.CompareToScryfall(card))
+                        if (!Exists!.CompareToScryfall(card))
                         {
+                            var ExistingCard = MtgCardService.GetById(new Guid(card.oracle_id!));
                             MtgCardService.Update(ExistingCard!.MapScryFallOnto(card));
                         }
                     }

@@ -55,7 +55,7 @@ namespace MyDeckStats
 
             return new MtgCard()
             {
-                Id = new Guid(scryfallMtgCard.Id!),
+                Id = new Guid(scryfallMtgCard.oracle_id!),
                 Name = scryfallMtgCard.Name,
                 Description = scryfallMtgCard.Name,
                 OracleId = new Guid(scryfallMtgCard.oracle_id!),
@@ -71,7 +71,8 @@ namespace MyDeckStats
                 EdhrecRank = scryfallMtgCard.edhrec_rank,
                 PennyRank = scryfallMtgCard.penny_rank,
                 ProducesMana = scryfallMtgCard.produced_mana != null ? true : false,
-                Slug = scryfallMtgCard.Name!.ToUpper()
+                Slug = scryfallMtgCard.Name!.ToUpper(),
+                Keywords = String.Join(",", scryfallMtgCard.keywords!),
             };
         }
 
@@ -90,6 +91,7 @@ namespace MyDeckStats
             mtgCard.Rarity = scryfallMtgCard.rarity;
             mtgCard.EdhrecRank = scryfallMtgCard.edhrec_rank;
             mtgCard.ProducesMana = scryfallMtgCard.produced_mana != null ? true : false;
+            mtgCard.Keywords = String.Join(",", scryfallMtgCard.keywords!);
 
             return mtgCard;
         }
@@ -188,7 +190,8 @@ namespace MyDeckStats
                 mtgCard.Toughness == (int.TryParse(scryfallMtgCard.toughness, out int y) ? y : 0) &&
                 mtgCard.Rarity == scryfallMtgCard.rarity &&
                 mtgCard.EdhrecRank == scryfallMtgCard.edhrec_rank &&
-                mtgCard.ProducesMana == (scryfallMtgCard.produced_mana != null ? true : false)
+                mtgCard.ProducesMana == (scryfallMtgCard.produced_mana != null ? true : false) &&
+                mtgCard.Keywords == String.Join(",", scryfallMtgCard.keywords!)
             );
         }
     }

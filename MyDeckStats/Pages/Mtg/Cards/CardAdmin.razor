@@ -1,0 +1,11 @@
+﻿@page "/cardadmin"
+
+<AuthorizeView Roles="SuperUser">
+    <MudText @attributes='Splats.PageHeader("CardAdmin")'>Card Admin</MudText>
+
+    <MudPaper Class="pa-4 mt-4">
+        <MudGrid>
+            <MudButton Disabled="Disabled" @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => UpdateScryfallAll())">Scryfall Update</MudButton>
+        </MudGrid>
+    </MudPaper>
+</AuthorizeView>

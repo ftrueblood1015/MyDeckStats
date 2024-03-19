@@ -32,5 +32,7 @@ namespace MyDeckStats.Domain.Entities.Mtg.Cards
 
         [Required]
         public string? Slug { get; set; }
+
+        public string? Keywords { get; set; }
     }
 }
