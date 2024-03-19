@@ -13,9 +13,6 @@
         <ToolBarContent>
             <MudSpacer />
             <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
-            <AuthorizeView Roles="SuperUser" Context="AuthorizedContextInner">
-                <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => UpdateScryfallAll())">Scryfall Update</MudButton>
-            </AuthorizeView>
         </ToolBarContent>
         <Columns>
             <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
