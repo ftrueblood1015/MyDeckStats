@@ -55,7 +55,7 @@ namespace MyDeckStats.UnitTests.ServiceTests
             // Act
             var result = RoleService.Add(AddRole);
 
-            // Arrange 
+            // Assert 
             result.Id.ShouldBe(AddRole.Id);
         }
 

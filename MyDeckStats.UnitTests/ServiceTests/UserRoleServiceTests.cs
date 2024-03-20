@@ -3,11 +3,6 @@ using Moq;
 using MyDeckStats.Domain.Interfaces.Repositories.Users;
 using MyDeckStats.Services.Users;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyDeckStats.UnitTests.ServiceTests
 {
@@ -55,7 +50,7 @@ namespace MyDeckStats.UnitTests.ServiceTests
             // Act
             var result = UserRoleService.Add(Add);
 
-            // Arrange 
+            // Assert 
             result.RoleId.ShouldBe(Add.RoleId);
         }
 
