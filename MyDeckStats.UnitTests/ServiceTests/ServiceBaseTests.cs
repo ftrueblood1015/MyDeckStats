@@ -4,7 +4,6 @@ using MyDeckStats.Domain.Interfaces.Services;
 using MyDeckStats.Services.Users;
 using MyDeckStats.UnitTests.MockBases;
 using Shouldly;
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace MyDeckStats.UnitTests.ServiceTests
@@ -34,7 +33,6 @@ namespace MyDeckStats.UnitTests.ServiceTests
         protected virtual T CreateRandomEntity()
         {
             var entity = new T();
-            var exclude = new HashSet<string>() { "Id", "Name", "Description"};
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var prop in properties)
@@ -47,16 +45,10 @@ namespace MyDeckStats.UnitTests.ServiceTests
                     case Type _ when prop.PropertyType == typeof(string):
                         prop?.SetValue(entity, Guid.NewGuid().ToString());
                         break;
-                    case Type _ when prop.PropertyType == typeof(int):
+                    case Type _ when prop.PropertyType == typeof(int) || prop.PropertyType == typeof(int?):
                         prop?.SetValue(entity, new Random().Next(1, 9));
                         break;
-                    case Type _ when prop.PropertyType == typeof(int?):
-                        prop?.SetValue(entity, new Random().Next(1, 9));
-                        break;
-                    case Type _ when prop.PropertyType == typeof(Guid):
-                        prop?.SetValue(entity, Guid.NewGuid());
-                        break;
-                    case Type _ when prop.PropertyType == typeof(Guid?):
+                    case Type _ when prop.PropertyType == typeof(Guid) || prop.PropertyType == typeof(Guid?):
                         prop?.SetValue(entity, Guid.NewGuid());
                         break;
                 }
