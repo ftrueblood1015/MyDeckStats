@@ -37,7 +37,6 @@ namespace MyDeckStats.UnitTests.MockBases
 
             mock.Setup(x => x.Filter(It.IsAny<Func<T, Boolean>>())).Returns((Func<T, bool> x) => { return list.Where(x); });
 
-
             return mock;
         }
     }
