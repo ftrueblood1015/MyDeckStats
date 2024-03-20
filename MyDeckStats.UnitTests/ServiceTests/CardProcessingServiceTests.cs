@@ -105,6 +105,26 @@ namespace MyDeckStats.UnitTests.ServiceTests
             keywords.Count().ShouldBe(2);
         }
 
+        [Test]
+        [Order(5)]
+        public void Can_Process_Keywords_With_Empty_Or_Null_Keyword()
+        {
+            // Arrange
+            RemoveAllFromCardRepo();
+            RemoveAllFromKeywordRepo();
+
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Test Card", Slug = "TEST CARD", Keywords = "First Strike, Haste," });
+
+            // Act
+            var result = ProcessingService.ProcessCardKeywords();
+            var keywords = MtgKeywordService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            keywords.Count().ShouldBe(2);
+        }
+
         private void RemoveAllFromCardRepo()
         {
             var all = MtgCardService.GetAll();

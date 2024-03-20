@@ -1,4 +1,5 @@
-﻿using MyDeckStats.Domain.Entities.Mtg.Cards;
+﻿using Microsoft.IdentityModel.Tokens;
+using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Interfaces.Services.Mtg;
 
 namespace MyDeckStats.Services.Mtg
@@ -18,11 +19,11 @@ namespace MyDeckStats.Services.Mtg
         {
             try
             {
-                foreach (var card in CardService.Filter(x => x.Keywords != null))
+                foreach (var card in CardService.Filter(x => x.Keywords != null).ToList())
                 {
                     KeywordService.Filter(x => x.MtgCardId == card.Id).ToList().ForEach(x => KeywordService.Delete(x));
 
-                    card.Keywords!.Split(",").Distinct().ToList().ForEach(x => KeywordService.Add(new MtgKeyword() { Id = Guid.NewGuid(), Name = x, Description = x, MtgCardId = card.Id }));
+                    card.Keywords!.Split(",").Where(x => !x.IsNullOrEmpty()).Distinct().ToList().ForEach(x => KeywordService.Add(new MtgKeyword() { Id = Guid.NewGuid(), Name = x, Description = x, MtgCardId = card.Id }));
                 }
 
                 return true;

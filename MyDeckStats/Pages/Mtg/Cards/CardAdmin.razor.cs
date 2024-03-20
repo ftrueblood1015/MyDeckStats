@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MyDeckStats.Domain.Interfaces.Services.Mtg;
 using MyDeckStats.Domain.Interfaces.Services.Scryfall;
 using MyDeckStats.Domain.Models;
 
@@ -8,6 +9,9 @@ namespace MyDeckStats.Pages.Mtg.Cards
     {
         [Inject]
         private IScryfallMtgCardService<ScryfallMtgCard>? ScryfallMtgCardService { get; set; }
+
+        [Inject]
+        private ICardProcessingService CardProcessingService { get; set; }
 
         private bool Disabled = false;
 
@@ -22,13 +26,19 @@ namespace MyDeckStats.Pages.Mtg.Cards
             }
 
             var result = ScryfallMtgCardService.DownloadFileAndImport();
+        }
 
-            if (result.IsCompletedSuccessfully)
+        private async Task ProcessKeywords()
+        {
+            Disabled = true;
+
+            if (CardProcessingService == null)
             {
                 Disabled = false;
+                throw new Exception($"{nameof(CardProcessingService)} is null");
             }
 
-            Disabled = false;
+            var result = CardProcessingService.ProcessCardKeywords();
         }
     }
 }
