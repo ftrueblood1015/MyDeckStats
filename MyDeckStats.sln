@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDeckStats", "MyDeckStats\MyDeckStats.csproj", "{4514C82D-7CD8-4354-858C-706AADA28554}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDeckStats.UnitTests", "MyDeckStats.UnitTests\MyDeckStats.UnitTests.csproj", "{73317BE4-D01E-44C5-99E7-BFA49FA395C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyDeckStats.UnitTests", "MyDeckStats.UnitTests\MyDeckStats.UnitTests.csproj", "{73317BE4-D01E-44C5-99E7-BFA49FA395C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,20 @@
+﻿@page "/mastertype"
+@page "/mastertype/{EntityId}"
+
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Shared;
+
+@inherits DetailPageBase<MasterType>;
+
+<MudText @attributes='Splats.PageHeader("MasterTypeDetail")'>Master Card Type Detail</MudText>
+
+<MudForm @ref="Form" @bind-IsValid="@success">
+    <MudPaper Class="pa-4">
+        <EntityBaseForm Entity="@Entity"></EntityBaseForm>
+    </MudPaper>
+    <MudPaper Class="pa-4">
+        <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "mastertypes"))">Save</MudButton>
+        <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
+        <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("mastertypes"))">Cancel</MudButton>
+    </MudPaper>
+</MudForm>

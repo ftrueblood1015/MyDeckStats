@@ -1,0 +1,15 @@
+﻿@using MyDeckStats.Domain.Entities;
+
+<MudGrid>
+    <MudItem xs="12" md="12" lg="12">
+        <MudTextField @bind-Value="Entity.Name" @attributes="@Splats.TextRequired(nameof(Entity.Name))" For="@(() => Entity.Name)" />
+    </MudItem>
+    <MudItem xs="12" md="12" lg="12">
+        <MudTextField @bind-Value="Entity.Description" @attributes="@Splats.TextRequired(nameof(Entity.Description))" For="@(() => Entity.Description)" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public EntityBase Entity { get; set; } = new EntityBase();
+}

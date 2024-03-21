@@ -1,0 +1,32 @@
+﻿@page "/mastertypes"
+
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Shared;
+
+@inherits SummaryPageBase<MasterType>;
+
+<MudText @attributes='Splats.PageHeader("MasterTypes")'>Master Card Type Summary</MudText>
+
+<MudDataGrid @attributes='Splats.DataGrid("MasterType")' T="MasterType" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+             Filterable="true" QuickFilter="@_quickFilter">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
+        <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => Add(DetailRoute))">Add</MudButton>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
+        <PropertyColumn Property="x => x.Description" />
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudButton @attributes="Splats.DeleteButton()" Size="@Size.Small" OnClick="@(() => OnDeleteClicked(context.Item))">Delete</MudButton>
+                    <MudButton @attributes="Splats.EditButton()" Size="@Size.Small" OnClick="@(() => Edit(context.Item, DetailRoute))">Edit</MudButton>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="MasterType" />
+    </PagerContent>
+</MudDataGrid>
