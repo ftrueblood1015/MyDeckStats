@@ -3,5 +3,6 @@
     public interface ICardProcessingService
     {
         bool ProcessCardKeywords();
+        bool ProcessCardColorIdentities();
     }
 }
