@@ -4,5 +4,6 @@
     {
         bool ProcessCardKeywords();
         bool ProcessCardColorIdentities();
+        bool ProcessCardTypes();
     }
 }

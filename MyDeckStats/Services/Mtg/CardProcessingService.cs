@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Interfaces.Services.Mtg;
+using System.Linq;
 
 namespace MyDeckStats.Services.Mtg
 {
@@ -9,12 +10,22 @@ namespace MyDeckStats.Services.Mtg
         private readonly IMtgCardService CardService;
         private readonly IMtgKeywordService KeywordService;
         private readonly IColorIdentityService ColorIdentityService;
+        private readonly ICardTypeService CardTypeService;
+        private readonly IMasterTypeService MasterTypeService;
 
-        public CardProcessingService(IMtgCardService mtgCardService, IMtgKeywordService keywordService, IColorIdentityService colorIdentityService)
+        public CardProcessingService(
+            IMtgCardService mtgCardService,
+            IMtgKeywordService keywordService,
+            IColorIdentityService colorIdentityService,
+            ICardTypeService cardTypeService,
+            IMasterTypeService masterTypeService
+            )
         {
             CardService = mtgCardService;
             KeywordService = keywordService;
             ColorIdentityService = colorIdentityService;
+            CardTypeService = cardTypeService;
+            MasterTypeService = masterTypeService;
         }
 
         public bool ProcessCardColorIdentities()
@@ -51,6 +62,33 @@ namespace MyDeckStats.Services.Mtg
             catch(Exception ex)
             {
                 throw new Exception($"Could not process keywords: {ex}");
+            }
+        }
+
+        public bool ProcessCardTypes()
+        {
+            try
+            {
+                var allTypes = MasterTypeService.GetAll().ToList();
+
+                foreach (var card in CardService.Filter(x => x.Type != null).ToList())
+                {
+                    CardTypeService.Filter(x => x.MtgCardId == card.Id).ToList().ForEach(x => CardTypeService.Delete(x));
+
+                    foreach (var type in allTypes)
+                    {
+                        if (card.Type!.ToUpper().Contains(type.Name!.ToUpper()))
+                        {
+                            CardTypeService.Add(new CardType() { Id = Guid.NewGuid(), Name = type.Name, Description = $"{card.Name} - {type.Name}", MtgCardId = card.Id });
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Could not process card types: {ex}");
             }
         }
     }
