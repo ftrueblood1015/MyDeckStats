@@ -61,15 +61,34 @@
                 }
             </MudGrid>
             <MudGrid Class="mt-3 mb-3">
-                @foreach (var identity in ColorIdentities!)
-                {
-                    <MudChip Color="Color.Success">@identity.Name</MudChip>
-                }
-            </MudGrid>
-            <MudGrid Class="mt-3 mb-3">
                 @foreach (var cardType in CardTypes!)
                 {
                     <MudChip Color="Color.Warning">@cardType.Name</MudChip>
+                }
+            </MudGrid>
+            <MudGrid Class="mt-3 mb-3">
+                @foreach (var identity in ColorIdentities!)
+                {
+                    switch (@identity.Name)
+                    {
+                        case "U":
+                            <MudChip Color="Color.Info">@identity.Name</MudChip>
+                            break;
+                        case "B":
+                            <MudChip Color="Color.Dark">@identity.Name</MudChip>
+                            break;
+                        case "G":
+                            <MudChip Color="Color.Success">@identity.Name</MudChip>
+                            break;
+                        case "R":
+                            <MudChip Color="Color.Error">@identity.Name</MudChip>
+                            break;
+                        case "W":
+                            <MudChip Color="Color.Warning">@identity.Name</MudChip>
+                            break;
+                        default:
+                            break;
+                    }
                 }
             </MudGrid>
         </MudPaper>
