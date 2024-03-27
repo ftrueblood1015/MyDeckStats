@@ -54,6 +54,24 @@
                     <MudTextField @bind-Value="Entity!.OracleText" @attributes="@Splats.TextAreaRequired(nameof(Entity.OracleText))" For="@(() => Entity!.OracleText)" ReadOnly="IsReadOnly" />
                 </MudItem>
             </MudGrid>
+            <MudGrid Class="mt-3 mb-3">
+                @foreach(var keyword in MtgKeywords!)
+                {
+                    <MudChip Color="Color.Primary">@keyword.Name</MudChip>
+                }
+            </MudGrid>
+            <MudGrid Class="mt-3 mb-3">
+                @foreach (var identity in ColorIdentities!)
+                {
+                    <MudChip Color="Color.Success">@identity.Name</MudChip>
+                }
+            </MudGrid>
+            <MudGrid Class="mt-3 mb-3">
+                @foreach (var cardType in CardTypes!)
+                {
+                    <MudChip Color="Color.Warning">@cardType.Name</MudChip>
+                }
+            </MudGrid>
         </MudPaper>
         <MudPaper Class="pa-4">
             <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("mtgcards"))">Cancel</MudButton>
