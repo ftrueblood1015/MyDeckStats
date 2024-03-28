@@ -18,5 +18,7 @@ namespace MyDeckStats.Data
         DbSet<MtgKeyword> MtgKeywords => Set<MtgKeyword>();
         DbSet<SetCard> SetCards => Set<SetCard>();
         DbSet<MasterType> MasterTypes => Set<MasterType>();
+        DbSet<MasterPurpose> MasterPurposes => Set<MasterPurpose>();
+        DbSet<CardPurpose> CardPurposes => Set<CardPurpose>();
     }
 }
