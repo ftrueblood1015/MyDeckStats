@@ -1,7 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Interfaces.Services.Mtg;
-using System.Linq;
 
 namespace MyDeckStats.Services.Mtg
 {
@@ -12,13 +11,17 @@ namespace MyDeckStats.Services.Mtg
         private readonly IColorIdentityService ColorIdentityService;
         private readonly ICardTypeService CardTypeService;
         private readonly IMasterTypeService MasterTypeService;
+        private readonly IMasterPurposeService MasterPurposeService;
+        private readonly ICardPurposeService CardPurposeService;
 
         public CardProcessingService(
             IMtgCardService mtgCardService,
             IMtgKeywordService keywordService,
             IColorIdentityService colorIdentityService,
             ICardTypeService cardTypeService,
-            IMasterTypeService masterTypeService
+            IMasterTypeService masterTypeService,
+            IMasterPurposeService masterPurposeService,
+            ICardPurposeService cardPurposeService
             )
         {
             CardService = mtgCardService;
@@ -26,6 +29,8 @@ namespace MyDeckStats.Services.Mtg
             ColorIdentityService = colorIdentityService;
             CardTypeService = cardTypeService;
             MasterTypeService = masterTypeService;
+            MasterPurposeService = masterPurposeService;
+            CardPurposeService = cardPurposeService;
         }
 
         public bool ProcessCardColorIdentities()
@@ -62,6 +67,36 @@ namespace MyDeckStats.Services.Mtg
             catch(Exception ex)
             {
                 throw new Exception($"Could not process keywords: {ex}");
+            }
+        }
+
+        public bool ProcessCardPurpose(Guid CardId)
+        {
+            try
+            {
+                var MasterPurposes = MasterPurposeService.Filter(x => x.IsActive == true).ToList();
+                var Card = CardService.GetById(CardId);
+
+                CardPurposeService.Filter(x => x.MtgCardId == CardId).ToList().ForEach(x => CardPurposeService.Delete(x));
+
+                foreach (var purpose in MasterPurposes)
+                {
+                    var IncludeTerms = purpose.IncludeTerms!.ToUpper().Split(",").Where(x => !x.IsNullOrEmpty());
+                    var ExcludeTerms = purpose.ExcludeTerms != null ? purpose.ExcludeTerms!.ToUpper().Split(",").Where(x => !x.IsNullOrEmpty()) : new string[] { };
+
+                    if (IncludeTerms.All(x => Card!.OracleText!.ToUpper().Contains(x)) && !ExcludeTerms.Any(x => Card!.OracleText!.ToUpper().Contains(x)))
+                    {
+                        CardPurposeService.Add(
+                            new CardPurpose() { Id = Guid.NewGuid(), Description = $"{Card!.Name} - {purpose.Name}", Name = $"{purpose.Name}", MtgCardId = CardId }
+                        );
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Could not process card purpose: {ex}");
             }
         }
 

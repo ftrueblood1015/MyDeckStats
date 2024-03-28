@@ -15,6 +15,8 @@ namespace MyDeckStats.UnitTests.ServiceTests
         private IColorIdentityService ColorIdentityService;
         private ICardTypeService CardTypeService;
         private IMasterTypeService MasterTypeService;
+        private IMasterPurposeService MasterPurposeService;
+        private ICardPurposeService CardPurposeService;
 
         public CardProcessingServiceTests()
         {
@@ -32,19 +34,31 @@ namespace MyDeckStats.UnitTests.ServiceTests
                 new MasterType { Id = Guid.NewGuid(), Description = "Planeswalker", Name = "Planeswalker" },
                 new MasterType { Id = Guid.NewGuid(), Description = "Land", Name = "Land" },
             });
+            var masterPurposeRepo = MockRepositoryBase.MockRepo<IMasterPurposeRepository, MasterPurpose>(new List<MasterPurpose>() { 
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Land Destruction", Name = "Land Destruction", ExcludeTerms = null, IncludeTerms = "Destroy,Target,Land",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Creature Destruction", Name = "Creature Destruction", ExcludeTerms = null, IncludeTerms = "Destroy,Target,Creature",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Artifact Destruction", Name = "Artifact Destruction", ExcludeTerms = null, IncludeTerms = "Destroy,Target,Artifact",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Enchantment Destruction", Name = "Enchantment Destruction", ExcludeTerms = null, IncludeTerms = "Destroy,Target,Enchantment",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Planeswalker Destruction", Name = "Planeswalker Destruction", ExcludeTerms = null, IncludeTerms = "Destroy,Target,Planeswalker",IsActive = true }
+            });
+            var cardPurposeRepo = MockRepositoryBase.MockRepo<ICardPurposeRepository, CardPurpose>(new List<CardPurpose>() { });
 
             MtgCardService = new MtgCardService(mtgCardRepo.Object);
             MtgKeywordService = new MtgKeywordService(mtgKeywordRepo.Object);
             ColorIdentityService = new ColorIdentityService(colorIdentityRepo.Object);
             CardTypeService = new CardTypeService(cardTypeRepo.Object);
             MasterTypeService = new MasterTypeService(masterTypeRepo.Object);
+            MasterPurposeService = new MasterPurposeService(masterPurposeRepo.Object);
+            CardPurposeService = new CardPurposeService(cardPurposeRepo.Object);
 
             ProcessingService = new CardProcessingService(
                 MtgCardService,
                 MtgKeywordService,
                 ColorIdentityService,
                 CardTypeService,
-                MasterTypeService);
+                MasterTypeService,
+                MasterPurposeService,
+                CardPurposeService);
         }
 
         [Test]
@@ -351,12 +365,141 @@ namespace MyDeckStats.UnitTests.ServiceTests
             cardTypes.Count().ShouldBe(1);
         }
 
+        [Test]
+        [Order(16)]
+        public void Can_Process_CardPurpose_LandDestruction_No_Existing_CardPurposes()
+        {
+            // Arrange
+            EmptyAllRepos();
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Test Card", Slug = "TEST CARD", OracleText = "Sacrifice Strip Mine: Destroy target land." });
+
+            // Act
+            var result = ProcessingService.ProcessCardPurpose(guid);
+            var cardPurposes = CardPurposeService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            cardPurposes.Count().ShouldBe(1);
+        }
+
+        [Test]
+        [Order(17)]
+        public void Can_Process_CardPurpose_LandDestruction_With_Existing_CardPurposes_For_Card()
+        {
+            // Arrange
+            EmptyAllRepos();
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Test Card", Slug = "TEST CARD", OracleText = "Sacrifice Strip Mine: Destroy target land." });
+            CardPurposeService.Add(new CardPurpose() { Id = Guid.NewGuid(), Description = "Test", Name = "Test", MtgCardId = guid });
+
+            // Act
+            var result = ProcessingService.ProcessCardPurpose(guid);
+            var cardPurposes = CardPurposeService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            cardPurposes.Count().ShouldBe(1);
+        }
+
+        [Test]
+        [Order(18)]
+        public void Can_Process_CardPurpose_LandDestruction_With_Existing_CardPurposes_For_Other_Cards()
+        {
+            // Arrange
+            EmptyAllRepos();
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Test Card", Slug = "TEST CARD", OracleText = "Sacrifice Strip Mine: Destroy target land." });
+            CardPurposeService.Add(new CardPurpose() { Id = Guid.NewGuid(), Description = "Test", Name = "Test", MtgCardId = Guid.NewGuid() });
+
+            // Act
+            var result = ProcessingService.ProcessCardPurpose(guid);
+            var cardPurposes = CardPurposeService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            cardPurposes.Count().ShouldBe(2);
+        }
+
+        [Test]
+        [Order(19)]
+        public void Can_Process_CardPurpose_CreatureDestruction_No_Existing_CardPurposes()
+        {
+            // Arrange
+            EmptyAllRepos();
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Murder", Slug = "Murder", OracleText = "Destroy target creature." });
+
+            // Act
+            var result = ProcessingService.ProcessCardPurpose(guid);
+            var cardPurposes = CardPurposeService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            cardPurposes.Count().ShouldBe(1);
+        }
+
+        [Test]
+        [Order(20)]
+        public void Can_Process_CardPurpose_EnchantmentDestruction_No_Existing_CardPurposes()
+        {
+            // Arrange
+            EmptyAllRepos();
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Cleansing Ray", Slug = "Cleansing Ray", OracleText = "Choose one —\r\n\r\n• Destroy target Vampire.\r\n\r\n• Destroy target enchantment." });
+
+            // Act
+            var result = ProcessingService.ProcessCardPurpose(guid);
+            var cardPurposes = CardPurposeService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            cardPurposes.Count().ShouldBe(1);
+        }
+
+        [Test]
+        [Order(20)]
+        public void Can_Process_CardPurpose_ArtifactDestruction_No_Existing_CardPurposes()
+        {
+            // Arrange
+            EmptyAllRepos();
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Ancient Grudge ", Slug = "Ancient Grudge" , OracleText = "Destroy target artifact.\r\n\r\nFlashback Green (You may cast this card from your graveyard for its flashback cost. Then exile it.)" });
+
+            // Act
+            var result = ProcessingService.ProcessCardPurpose(guid);
+            var cardPurposes = CardPurposeService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            cardPurposes.Count().ShouldBe(1);
+        }
+
+        [Test]
+        [Order(21)]
+        public void Can_Process_CardPurpose_MultiPurpose_No_Existing_CardPurposes()
+        {
+            // Arrange
+            EmptyAllRepos();
+            var guid = Guid.NewGuid();
+            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Bedevil ", Slug = "Bedevil", OracleText = "Destroy target artifact, creature, or planeswalker." });
+
+            // Act
+            var result = ProcessingService.ProcessCardPurpose(guid);
+            var cardPurposes = CardPurposeService.GetAll();
+
+            // Assert
+            result.ShouldBeTrue();
+            cardPurposes.Count().ShouldBeGreaterThan(1);
+        }
+
         private void EmptyAllRepos()
         {
             RemoveAllFromCardRepo();
             RemoveAllFromKeywordRepo();
             RemoveAllFromColorIdentityRepo();
             RemoveAllFromCardTypeRepo();
+            RemoveAllFromCardPurposeRepo();
         }
 
         private void RemoveAllFromCardRepo()
@@ -384,7 +527,14 @@ namespace MyDeckStats.UnitTests.ServiceTests
         {
             var all = CardTypeService.GetAll();
             all.ToList().ForEach(x => CardTypeService.Delete(x));
-            ColorIdentityService.GetAll().Count().ShouldBe(0);
+            CardTypeService.GetAll().Count().ShouldBe(0);
+        }
+
+        private void RemoveAllFromCardPurposeRepo()
+        {
+            var all = CardPurposeService.GetAll();
+            all.ToList().ForEach(x => CardPurposeService.Delete(x));
+            CardPurposeService.GetAll().Count().ShouldBe(0);
         }
     }
 }

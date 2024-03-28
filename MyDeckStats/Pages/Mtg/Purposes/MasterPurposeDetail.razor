@@ -6,24 +6,26 @@
 
 @inherits DetailPageBase<MasterPurpose>;
 
-<MudForm @ref="Form" @bind-IsValid="@success">
-    <MudPaper Class="pa-4">
-        <EntityBaseForm Entity="@Entity"></EntityBaseForm>
-        <MudGrid>
-            <MudItem xs="12" md="12" lg="12">
-                <MudTextField @bind-Value="Entity!.IncludeTerms" @attributes="@Splats.TextRequired(nameof(Entity.IncludeTerms))" For="@(() => Entity!.IncludeTerms)" />
-            </MudItem>
-            <MudItem xs="12" md="12" lg="12">
-                <MudTextField @bind-Value="Entity!.ExcludeTerms" @attributes="@Splats.TextOptional(nameof(Entity.ExcludeTerms))" For="@(() => Entity!.ExcludeTerms)" />
-            </MudItem>
-            <MudItem xs="3" md="3" lg="3">
-                <MudCheckBox @bind-Value="Entity!.IsActive" @attributes="@Splats.CheckBox(nameof(Entity.IsActive))" For="@(() => Entity!.IsActive)" />
-            </MudItem>
-        </MudGrid>
-    </MudPaper>
-    <MudPaper Class="pa-4">
-        <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "masterpurposes"))">Save</MudButton>
-        <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
-        <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("masterpurposes"))">Cancel</MudButton>
-    </MudPaper>
-</MudForm>
+<AuthorizeView Roles="SuperUser">
+    <MudForm @ref="Form" @bind-IsValid="@success">
+        <MudPaper Class="pa-4">
+            <EntityBaseForm Entity="@Entity"></EntityBaseForm>
+            <MudGrid>
+                <MudItem xs="12" md="12" lg="12">
+                    <MudTextField @bind-Value="Entity!.IncludeTerms" @attributes="@Splats.TextRequired(nameof(Entity.IncludeTerms))" For="@(() => Entity!.IncludeTerms)" />
+                </MudItem>
+                <MudItem xs="12" md="12" lg="12">
+                    <MudTextField @bind-Value="Entity!.ExcludeTerms" @attributes="@Splats.TextOptional(nameof(Entity.ExcludeTerms))" For="@(() => Entity!.ExcludeTerms)" />
+                </MudItem>
+                <MudItem xs="3" md="3" lg="3">
+                    <MudCheckBox @bind-Value="Entity!.IsActive" @attributes="@Splats.CheckBox(nameof(Entity.IsActive))" For="@(() => Entity!.IsActive)" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        <MudPaper Class="pa-4">
+            <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "masterpurposes"))">Save</MudButton>
+            <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
+            <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("masterpurposes"))">Cancel</MudButton>
+        </MudPaper>
+    </MudForm>
+</AuthorizeView>
