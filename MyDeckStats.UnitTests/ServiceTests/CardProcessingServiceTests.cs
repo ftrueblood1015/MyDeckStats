@@ -378,24 +378,6 @@ namespace MyDeckStats.UnitTests.ServiceTests
         }
 
         [Test]
-        [Order(16)]
-        public void Can_Process_CardPurpose_LandDestruction_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Test Card", Slug = "TEST CARD", OracleText = "Sacrifice Strip Mine: Destroy target land." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
         [Order(17)]
         public void Can_Process_CardPurpose_LandDestruction_With_Existing_CardPurposes_For_Card()
         {
@@ -434,309 +416,38 @@ namespace MyDeckStats.UnitTests.ServiceTests
         }
 
         [Test]
-        [Order(19)]
-        public void Can_Process_CardPurpose_CreatureDestruction_No_Existing_CardPurposes()
+        [TestCase("Destroy target Land.", 1)]
+        [TestCase("Destroy target creature.", 1)]
+        [TestCase("Choose one —\r\n\r\n• Destroy target Vampire.\r\n\r\n• Destroy target enchantment.", 1)]
+        [TestCase("Destroy target artifact.\r\n\r\nFlashback Green (You may cast this card from your graveyard for its flashback cost. Then exile it.)", 1)]
+        [TestCase("Destroy target artifact, creature, or planeswalker.", 3)]
+        [TestCase("Destroy target permanent", 1)]
+        [TestCase("Destroy All Lands", 1)]
+        [TestCase("Destroy all creatures. They can't be regenerated.", 1)]
+        [TestCase("Destroy all enchantments", 1)]
+        [TestCase("Destroy all artifacts", 1)]
+        [TestCase("Destroy all creatures and planeswalkers except for commanders.", 2)]
+        [TestCase("Destroy all permanents", 1)]
+        [TestCase("Target player draws thee cards", 1)]
+        [TestCase("Target player reveals his or her hand. You choose a nonland card from it. That player discards that card. You lose 2 life.", 1)]
+        [TestCase("Spells you control can't be countered by blue or black spells this turn, and creatures you control can't be the targets of blue or black spells this turn.", 0)]
+        [TestCase("Sliver Queen counts as a Sliver.\r\n2: Put a Sliver token into play. Treat this token as a 1/1 colorless creature.", 1)]
+        [TestCase("Whenever you cast a noncreature spell, create an X/X blue Shark creature token with flying, where X is that spell’s converted mana cost.\r\nCycling X1U (X1U, Discard this card: Draw a card.)\r\nWhen you cycle Shark Typhoon, create an X/X blue Shark creature token with flying.", 3)]
+        public void Can_Process_CardPurpose_No_Existing_CardPurposes(string oracleText, int expectedPurposes)
         {
             // Arrange
             EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Murder", Slug = "Murder", OracleText = "Destroy target creature." });
+            var id = Guid.NewGuid();
+            MtgCard card = new MtgCard() { Id = id, OracleId = id, Name = "Test", Slug = "TEST", OracleText = oracleText };
+            MtgCardService.Add(card);
 
             // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
+            var result = ProcessingService.ProcessCardPurpose(card.Id);
             var cardPurposes = CardPurposeService.GetAll();
 
             // Assert
             result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(20)]
-        public void Can_Process_CardPurpose_EnchantmentDestruction_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Cleansing Ray", Slug = "Cleansing Ray", OracleText = "Choose one —\r\n\r\n• Destroy target Vampire.\r\n\r\n• Destroy target enchantment." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(20)]
-        public void Can_Process_CardPurpose_ArtifactDestruction_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Ancient Grudge ", Slug = "Ancient Grudge" , OracleText = "Destroy target artifact.\r\n\r\nFlashback Green (You may cast this card from your graveyard for its flashback cost. Then exile it.)" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(21)]
-        public void Can_Process_CardPurpose_MultiPurpose_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Bedevil ", Slug = "Bedevil", OracleText = "Destroy target artifact, creature, or planeswalker." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBeGreaterThan(1);
-        }
-
-        [Test]
-        [Order(22)]
-        public void Can_Process_CardPurpose_PermanentDestruction_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Vindicate", Slug = "Vindicate", OracleText = "Destroy target permanent" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(23)]
-        public void Can_Process_CardPurpose_LandWipe_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Armeggeddon", Slug = "Armeggeddon", OracleText = "Destroy All Lands" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(24)]
-        public void Can_Process_CardPurpose_CreatureWipe_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Wrath Of God", Slug = "Wrath Of God", OracleText = "Destroy all creatures. They can't be regenerated." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(25)]
-        public void Can_Process_CardPurpose_EnchantmentWipe_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Back To Nature", Slug = "Back To Nature", OracleText = "Destroy all enchantments" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(26)]
-        public void Can_Process_CardPurpose_ArtifactWipe_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Shatter Storm", Slug = "Shatter Storm", OracleText = "Destroy all artifacts" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(27)]
-        public void Can_Process_CardPurpose_PlaneswalkerWipe_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Slash The Ranks", Slug = "Slash The Ranks", OracleText = "Destroy all creatures and planeswalkers except for commanders." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(2);
-        }
-
-        [Test]
-        [Order(28)]
-        public void Can_Process_CardPurpose_BoardWipe_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Theory", Slug = "Theory", OracleText = "Destroy all permanents" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(29)]
-        public void Can_Process_CardPurpose_CardDraw_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Ancestral Recall", Slug = "Ancestral Recall", OracleText = "Target player draws thee cards" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(30)]
-        public void Can_Process_CardPurpose_Discard_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Thoughtseize", Slug = "Thoughtseize", OracleText = "Target player reveals his or her hand. You choose a nonland card from it. That player discards that card. You lose 2 life." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(31)]
-        public void Can_Process_CardPurpose_CounterSpell_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Counterspell", Slug = "Counterspell", OracleText = "Counter target spell" });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(32)]
-        public void Can_Process_CardPurpose_CounterSpell_With_Exclude_Cant_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Autumn's Veil", Slug = "Autumn's Veil", OracleText = "Spells you control can't be countered by blue or black spells this turn, and creatures you control can't be the targets of blue or black spells this turn." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(0);
-        }
-
-        [Test]
-        [Order(33)]
-        public void Can_Process_CardPurpose_TokenGeneration_Put_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Sliver Queen", Slug = "Sliver Queen", OracleText = "Sliver Queen counts as a Sliver.\r\n2: Put a Sliver token into play. Treat this token as a 1/1 colorless creature." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(1);
-        }
-
-        [Test]
-        [Order(33)]
-        public void Can_Process_CardPurpose_TokenGeneration_Create_And_Cycling_No_Existing_CardPurposes()
-        {
-            // Arrange
-            EmptyAllRepos();
-            var guid = Guid.NewGuid();
-            MtgCardService.Add(new MtgCard() { Id = guid, OracleId = guid, Name = "Shark Typhoon", Slug = "Shark Typhoon", OracleText = "Whenever you cast a noncreature spell, create an X/X blue Shark creature token with flying, where X is that spell’s converted mana cost.\r\nCycling X1U (X1U, Discard this card: Draw a card.)\r\nWhen you cycle Shark Typhoon, create an X/X blue Shark creature token with flying." });
-
-            // Act
-            var result = ProcessingService.ProcessCardPurpose(guid);
-            var cardPurposes = CardPurposeService.GetAll();
-
-            // Assert
-            result.ShouldBeTrue();
-            cardPurposes.Count().ShouldBe(3);
+            cardPurposes.Count().ShouldBe(expectedPurposes);
         }
 
         private void EmptyAllRepos()
