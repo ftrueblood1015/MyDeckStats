@@ -51,7 +51,14 @@ namespace MyDeckStats.UnitTests.ServiceTests
                 new MasterPurpose { Id = Guid.NewGuid(), Description = "Discard", Name = "Discard", ExcludeTerms = null, IncludeTerms = "Discard,Card",IsActive = true },
                 new MasterPurpose { Id = Guid.NewGuid(), Description = "Counter Spell", Name = "Counter Spell", ExcludeTerms = "Can't,Can not,Cannot", IncludeTerms = "Counter,Spell",IsActive = true },
                 new MasterPurpose { Id = Guid.NewGuid(), Description = "Token Generation", Name = "Token Generation", ExcludeTerms = null, IncludeTerms = "Put,Token",IsActive = true },
-                new MasterPurpose { Id = Guid.NewGuid(), Description = "Token Generation", Name = "Token Generation", ExcludeTerms = null, IncludeTerms = "Create,Token",IsActive = true }
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Token Generation", Name = "Token Generation", ExcludeTerms = null, IncludeTerms = "Create,Token",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Graveyard Removal", Name = "Graveyard Removal", ExcludeTerms = "Flashback", IncludeTerms = "Exile,graveyard",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Creature Buff", Name = "Creature Buff", ExcludeTerms = null, IncludeTerms = "Creature,+,/",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Creature Buff", Name = "Creature Buff", ExcludeTerms = "1,2,3,4,5,6,7,8,9,0", IncludeTerms = "Creature,gain",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Permanent Exile", Name = "Permanent Exile", ExcludeTerms = null, IncludeTerms = "Exile,Permanent",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Creature Exile", Name = "Creature Exile", ExcludeTerms = "Gain", IncludeTerms = "Exile,Creature",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Life Gain", Name = "Life Gain", ExcludeTerms = "LifeLink", IncludeTerms = "Gain,Life",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Life Drain", Name = "Life Drain", ExcludeTerms = null, IncludeTerms = "Life,Lose",IsActive = true },
             });
             var cardPurposeRepo = MockRepositoryBase.MockRepo<ICardPurposeRepository, CardPurpose>(new List<CardPurpose>() { });
 
@@ -429,10 +436,18 @@ namespace MyDeckStats.UnitTests.ServiceTests
         [TestCase("Destroy all creatures and planeswalkers except for commanders.", 2)]
         [TestCase("Destroy all permanents", 1)]
         [TestCase("Target player draws thee cards", 1)]
-        [TestCase("Target player reveals his or her hand. You choose a nonland card from it. That player discards that card. You lose 2 life.", 1)]
+        [TestCase("Target player reveals his or her hand. You choose a nonland card from it. That player discards that card. You lose 2 life.", 2)]
         [TestCase("Spells you control can't be countered by blue or black spells this turn, and creatures you control can't be the targets of blue or black spells this turn.", 0)]
         [TestCase("Sliver Queen counts as a Sliver.\r\n2: Put a Sliver token into play. Treat this token as a 1/1 colorless creature.", 1)]
         [TestCase("Whenever you cast a noncreature spell, create an X/X blue Shark creature token with flying, where X is that spell’s converted mana cost.\r\nCycling X1U (X1U, Discard this card: Draw a card.)\r\nWhen you cycle Shark Typhoon, create an X/X blue Shark creature token with flying.", 3)]
+        [TestCase("Bojuka Bog enters the battlefield tapped.\r\n\r\nWhen Bojuka Bog enters the battlefield, exile target player’s graveyard.", 1)]
+        [TestCase("Creatures you control get +2/+0 until end of turn. If this spell was kicked, whenever a creature you control dies this turn, draw a card.", 2)]
+        [TestCase("\r\nChoose one. If you control a commander as you cast this spell, you may choose both instead.\r\n• Creatures you control gain flying, vigilance, and double strike until end of turn.\r\n• Creatures you control gain lifelink, indestructible, and protection from all colors until end of turn.", 1)]
+        [TestCase("Exile target permanent with converted mana cost 1.", 1)]
+        [TestCase("\r\nExile target creature. Its controller gains life equal to its power.", 2)]
+        [TestCase("Whenever another creature comes into play, you gain 1 life.", 1)]
+        [TestCase("Destroy target nonblack creature. It can't be regenerated. You lose life equal to that creature's toughness.\r\n", 2)]
+
         public void Can_Process_CardPurpose_No_Existing_CardPurposes(string oracleText, int expectedPurposes)
         {
             // Arrange
