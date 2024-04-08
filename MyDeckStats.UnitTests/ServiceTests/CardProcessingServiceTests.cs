@@ -59,6 +59,10 @@ namespace MyDeckStats.UnitTests.ServiceTests
                 new MasterPurpose { Id = Guid.NewGuid(), Description = "Creature Exile", Name = "Creature Exile", ExcludeTerms = "Gain", IncludeTerms = "Exile,Creature",IsActive = true },
                 new MasterPurpose { Id = Guid.NewGuid(), Description = "Life Gain", Name = "Life Gain", ExcludeTerms = "LifeLink", IncludeTerms = "Gain,Life",IsActive = true },
                 new MasterPurpose { Id = Guid.NewGuid(), Description = "Life Drain", Name = "Life Drain", ExcludeTerms = null, IncludeTerms = "Life,Lose",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Bounce", Name = "Bounce", ExcludeTerms = null, IncludeTerms = "Return,Target,Owner,Hand",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "Mass Bounce", Name = "Mass Bounce", ExcludeTerms = null, IncludeTerms = "Return,All,Owner,Hand",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "De-Buff", Name = "De-Buff -x/-x", ExcludeTerms = null, IncludeTerms = "Creature,-,/",IsActive = true },
+                new MasterPurpose { Id = Guid.NewGuid(), Description = "De-Buff", Name = "De-Buff Lose Ability", ExcludeTerms = null, IncludeTerms = "Creature,Loses",IsActive = true },
             });
             var cardPurposeRepo = MockRepositoryBase.MockRepo<ICardPurposeRepository, CardPurpose>(new List<CardPurpose>() { });
 
@@ -447,6 +451,10 @@ namespace MyDeckStats.UnitTests.ServiceTests
         [TestCase("\r\nExile target creature. Its controller gains life equal to its power.", 2)]
         [TestCase("Whenever another creature comes into play, you gain 1 life.", 1)]
         [TestCase("Destroy target nonblack creature. It can't be regenerated. You lose life equal to that creature's toughness.\r\n", 2)]
+        [TestCase("Return target nonland permanent you don't control to its owner's hand.\r\nOverload 6U (You may cast this spell for its overload cost. If you do, change its text by replacing all instances of \"target\" with \"each\".)", 2)]
+        [TestCase("Return target permanent to its owner's hand", 1)]
+        [TestCase("Distribute two -1/-1 counters among one or two target creatures", 1)]
+        [TestCase("Enchanted creature is an Insect artifact creature with base power and toughness 0/1 and has indestructible, and it loses all other abilities, card types, and creature types.", 1)]
 
         public void Can_Process_CardPurpose_No_Existing_CardPurposes(string oracleText, int expectedPurposes)
         {
