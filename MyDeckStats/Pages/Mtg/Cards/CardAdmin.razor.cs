@@ -66,5 +66,18 @@ namespace MyDeckStats.Pages.Mtg.Cards
 
             var result = CardProcessingService.ProcessCardTypes();
         }
+
+        private async Task ProcessCardPurposes()
+        {
+            Disabled = true;
+
+            if (CardProcessingService == null)
+            {
+                Disabled = false;
+                throw new Exception($"{nameof(CardProcessingService)} is null");
+            }
+
+            var result = CardProcessingService.ProcessAllCardPurposes();
+        }
     }
 }

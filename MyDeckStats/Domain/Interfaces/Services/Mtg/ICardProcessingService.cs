@@ -6,5 +6,6 @@
         bool ProcessCardColorIdentities();
         bool ProcessCardTypes();
         bool ProcessCardPurpose(Guid CardId);
+        bool ProcessAllCardPurposes();
     }
 }

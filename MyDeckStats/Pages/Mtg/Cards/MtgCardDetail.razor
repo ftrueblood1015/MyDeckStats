@@ -91,6 +91,12 @@
                     }
                 }
             </MudGrid>
+            <MudGrid Class="mt-3 mb-3">
+                @foreach (var purpose in CardPurposes!)
+                {
+                    <MudChip Color="Color.Success">@purpose.Name</MudChip>
+                }
+            </MudGrid>
         </MudPaper>
         <MudPaper Class="pa-4">
             <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("mtgcards"))">Cancel</MudButton>

@@ -33,6 +33,19 @@ namespace MyDeckStats.Services.Mtg
             CardPurposeService = cardPurposeService;
         }
 
+        public bool ProcessAllCardPurposes()
+        {
+            try
+            {
+                CardService.Filter(x => !x.OracleText.IsNullOrEmpty()).ToList().ForEach(card => { ProcessCardPurpose(card.Id); });
+                return true;
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception($"Could not process card purposes: {ex}");
+            }
+        }
+
         public bool ProcessCardColorIdentities()
         {
             try

@@ -19,6 +19,9 @@ namespace MyDeckStats.Pages.Mtg.Cards
         [Inject]
         private ICardTypeService? CardTypeService { get; set; }
 
+        [Inject]
+        private ICardPurposeService? CardPurposeService { get; set; }
+
         public MtgCard? Entity { get; set; } = new MtgCard();
 
         private List<MtgKeyword>? MtgKeywords { get; set; }
@@ -26,6 +29,8 @@ namespace MyDeckStats.Pages.Mtg.Cards
         private List<ColorIdentity>? ColorIdentities { get; set; }
 
         private List<CardType>? CardTypes { get; set; }
+
+        private List<CardPurpose>? CardPurposes { get; set; }
 
         private bool IsReadOnly = true;
 
@@ -35,6 +40,7 @@ namespace MyDeckStats.Pages.Mtg.Cards
             await GetCardKeywords();
             await GetColorIdentities();
             await GetCardTypes();
+            await GetCardPurposes();
             await base.OnInitializedAsync();
         }
 
@@ -81,6 +87,17 @@ namespace MyDeckStats.Pages.Mtg.Cards
 
             var Response = CardTypeService.Filter(x => x.MtgCardId == new Guid(EntityId));
             CardTypes = Response != null ? Response.ToList() : new List<CardType>();
+        }
+
+        private async Task GetCardPurposes()
+        {
+            if (CardPurposeService == null)
+            {
+                throw new Exception($"{nameof(CardPurposeService)}  is null!");
+            }
+
+            var Response = CardPurposeService.Filter(x => x.MtgCardId == new Guid(EntityId));
+            CardPurposes = Response != null ? Response.ToList() : new List<CardPurpose>();
         }
     }
 }
