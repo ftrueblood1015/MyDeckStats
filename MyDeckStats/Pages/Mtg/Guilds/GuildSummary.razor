@@ -1,0 +1,35 @@
+﻿@page "/guilds"
+
+@using MyDeckStats.Domain.Entities.Mtg.Decks;
+@using MyDeckStats.Pages.Shared;
+
+@inherits SummaryPageBase<Guild>;
+
+<MudText @attributes='Splats.PageHeader("Guild")'>Guild Summary</MudText>
+
+<AuthorizeView Roles="Admin" Context="AuthorizeContext">
+    <MudDataGrid @attributes='Splats.DataGrid("Guild")' T="Guild" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+                 Filterable="true" QuickFilter="@_quickFilter">
+        <ToolBarContent>
+            <MudSpacer />
+            <MudTextField @attributes='Splats.SearchField()' @bind-Value="_searchString" Class="mt-0"></MudTextField>
+            <MudButton @attributes="Splats.NewButton()" class="ml-2" OnClick="@(() => Add(DetailRoute))">Add</MudButton>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
+            <PropertyColumn Property="x => x.Description" />
+            <PropertyColumn Property="x => x.ColorIdentities" Title="Color Identities" />
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                        <MudButton @attributes="Splats.DeleteButton()" Size="@Size.Small" OnClick="@(() => OnDeleteClicked(context.Item))">Delete</MudButton>
+                        <MudButton @attributes="Splats.EditButton()" Size="@Size.Small" OnClick="@(() => Edit(context.Item, DetailRoute))">Edit</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="Guild" />
+        </PagerContent>
+    </MudDataGrid>
+</AuthorizeView>

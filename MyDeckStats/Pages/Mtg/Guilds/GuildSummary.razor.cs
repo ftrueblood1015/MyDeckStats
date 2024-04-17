@@ -3,16 +3,16 @@ using MyDeckStats.Commands.Navigation;
 using MyDeckStats.Domain.Entities.Mtg.Decks;
 using MyDeckStats.Pages.Shared;
 
-namespace MyDeckStats.Pages.Mtg.Formats
+namespace MyDeckStats.Pages.Mtg.Guilds
 {
-    public partial class FormatSummary : SummaryPageBase<Format>
+    public partial class GuildSummary : SummaryPageBase<Guild>
     {
         [Inject]
         private NavigationManager? NavigationManager { get; set; }
 
-        private string DetailRoute = "format";
+        private string DetailRoute = "guild";
 
-        public override Func<Format, bool> _quickFilter => x =>
+        public override Func<Guild, bool> _quickFilter => x =>
         {
             if (string.IsNullOrWhiteSpace(_searchString))
                 return true;
@@ -22,11 +22,5 @@ namespace MyDeckStats.Pages.Mtg.Formats
 
             return false;
         };
-
-        public void View(Format format, string route)
-        {
-            var navCommand = new NavigationCommand(NavigationManager!, $"/{route}/{format.Id}", false);
-            navCommand.Execute();
-        }
     }
 }

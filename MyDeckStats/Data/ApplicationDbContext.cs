@@ -22,5 +22,6 @@ namespace MyDeckStats.Data
         DbSet<MasterPurpose> MasterPurposes => Set<MasterPurpose>();
         DbSet<CardPurpose> CardPurposes => Set<CardPurpose>();
         DbSet<Format> Formats => Set<Format>();
+        DbSet<Guild> Guilds => Set<Guild>();
     }
 }
