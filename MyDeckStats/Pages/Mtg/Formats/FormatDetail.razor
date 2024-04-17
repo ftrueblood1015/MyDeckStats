@@ -1,0 +1,25 @@
+﻿@page "/format"
+@page "/format/{EntityId}"
+
+@using MyDeckStats.Domain.Entities.Mtg.Decks;
+@using MyDeckStats.Pages.Shared;
+
+@inherits DetailPageBase<Format>;
+
+<AuthorizeView Roles="SuperUser">
+    <MudForm @ref="Form" @bind-IsValid="@success">
+        <MudPaper Class="pa-4">
+            <EntityBaseForm Entity="@Entity"></EntityBaseForm>
+            <MudGrid>
+                <MudItem xs="12" md="12" lg="12">
+                    <MudNumericField @bind-Value="@Entity!.CardLimit" @attributes='Splats.NumericRequired("CardLimit")' />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+        <MudPaper Class="pa-4">
+            <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "formats"))">Save</MudButton>
+            <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
+            <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("formats"))">Cancel</MudButton>
+        </MudPaper>
+    </MudForm>
+</AuthorizeView>

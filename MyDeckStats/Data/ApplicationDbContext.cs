@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
+using MyDeckStats.Domain.Entities.Mtg.Decks;
 
 namespace MyDeckStats.Data
 {
@@ -20,5 +21,6 @@ namespace MyDeckStats.Data
         DbSet<MasterType> MasterTypes => Set<MasterType>();
         DbSet<MasterPurpose> MasterPurposes => Set<MasterPurpose>();
         DbSet<CardPurpose> CardPurposes => Set<CardPurpose>();
+        DbSet<Format> Formats => Set<Format>();
     }
 }
