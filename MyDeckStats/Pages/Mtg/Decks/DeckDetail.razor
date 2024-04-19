@@ -4,6 +4,7 @@
 @using MyDeckStats.Domain.Entities.Mtg.Decks;
 @using MyDeckStats.Domain.Entities.Mtg.Cards;
 @using MyDeckStats.Pages.Mtg.DeckCards;
+@using MyDeckStats.Pages.Mtg.CmcChartComponents;
 @using MyDeckStats.Pages.Shared;
 
 @inherits TrackableDetailPageBase<Deck>;
@@ -29,6 +30,9 @@
         {
             <MudItem xs="12" md="6" lg="6">
                 <DeckCardAddComponent DeckId="Entity!.Id" Username="@Username"></DeckCardAddComponent>
+            </MudItem>
+            <MudItem xs="12" md="6" lg="6">
+                <CmcChartComponent DeckId="Entity!.Id" Username="@Username"></CmcChartComponent>
             </MudItem>
         }
     </MudGrid>
