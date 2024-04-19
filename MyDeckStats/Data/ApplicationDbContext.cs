@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Entities.Mtg.Decks;
+using static MudBlazor.CategoryTypes;
 
 namespace MyDeckStats.Data
 {
@@ -24,5 +25,6 @@ namespace MyDeckStats.Data
         DbSet<Format> Formats => Set<Format>();
         DbSet<Guild> Guilds => Set<Guild>();
         DbSet<Deck> Decks => Set<Deck>();
+        DbSet<DeckCard> DeckCards => Set<DeckCard>();
     }
 }

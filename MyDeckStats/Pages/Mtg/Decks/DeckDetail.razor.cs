@@ -18,7 +18,7 @@ namespace MyDeckStats.Pages.Mtg.Decks
 
         protected override async Task OnInitializedAsync()
         {
-            username = (await AuthStat).User.Identity.Name; ;
+            username = (await AuthStat).User.Identity.Name;
             Entity = await SetEntity();
         }
 
