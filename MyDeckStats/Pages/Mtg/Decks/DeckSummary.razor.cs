@@ -1,18 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
-using MyDeckStats.Commands.Navigation;
 using MyDeckStats.Domain.Entities.Mtg.Decks;
 using MyDeckStats.Pages.Shared;
 
-namespace MyDeckStats.Pages.Mtg.Formats
+namespace MyDeckStats.Pages.Mtg.Decks
 {
-    public partial class FormatSummary : SummaryPageBase<Format>
+    public partial class DeckSummary : TrackableSummaryPageBase<Deck>
     {
-        [Inject]
-        private NavigationManager? NavigationManager { get; set; }
+        private string DetailRoute = "deck";
 
-        private string DetailRoute = "format";
-
-        public override Func<Format, bool> _quickFilter => x =>
+        public override Func<Deck, bool> _quickFilter => x =>
         {
             if (string.IsNullOrWhiteSpace(_searchString))
                 return true;

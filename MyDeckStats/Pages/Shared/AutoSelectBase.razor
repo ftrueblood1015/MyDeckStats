@@ -1,0 +1,78 @@
+﻿@using MyDeckStats.Domain.Entities;
+@using MyDeckStats.Domain.Interfaces.Services;
+
+@typeparam TEntity where TEntity : EntityBase
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudAutocomplete T="TEntity" Label="@Title" ValueChanged="value => EntityValueChanged(value)" 
+            Value="@BoundValue" SearchFunc="@Search" ToStringFunc=DisplayValue
+            AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Inject]
+    private IServiceBase<TEntity>? Service { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public TEntity? BoundValue { get; set; }
+
+    [Parameter]
+    public Guid BoundValueId { get; set; }
+
+    [Parameter]
+    public EventCallback<TEntity?> HandleChange { get; set; }
+
+    private bool firstRender = true;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        if (firstRender && BoundValueId != Guid.Empty)
+        {
+            SetValue(BoundValueId);
+            StateHasChanged();
+            firstRender = false;
+        }
+    }
+
+    private Func<TEntity, string?> DisplayValue = item => item is null ? null : item.Name;
+
+    private async Task<IEnumerable<TEntity>> Search(string value)
+    {
+        if (Service == null)
+        {
+            throw new Exception($"{nameof(Service)}  is null!");
+        }
+
+        if (string.IsNullOrEmpty(value))
+            return new List<TEntity>();
+
+        return Service.Filter(x => x.Name!.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    public void EntityValueChanged(TEntity? value)
+    {
+        HandleChange.InvokeAsync(value);
+    }
+
+    public async void SetValue(Guid Id)
+    {
+        if (Service == null)
+        {
+            throw new Exception($"{nameof(Service)}  is null!");
+        }
+
+        BoundValue = Service.GetById(Id);
+        await Search(BoundValue!.Name!);
+    }
+
+}

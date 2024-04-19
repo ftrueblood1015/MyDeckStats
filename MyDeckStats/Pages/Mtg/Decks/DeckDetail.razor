@@ -1,0 +1,24 @@
+﻿@page "/deck"
+@page "/deck/{EntityId}"
+
+@using MyDeckStats.Domain.Entities.Mtg.Decks;
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Shared;
+
+@inherits TrackableDetailPageBase<Deck>;
+
+<AuthorizeView>
+    <MudForm @ref="Form" @bind-IsValid="@success">
+        <MudPaper Class="pa-4">
+            <EntityBaseForm Entity="@Entity"></EntityBaseForm>
+            <AutoSelectBase TEntity="Format" Title="Format" BoundValue="@Entity!.Format" BoundValueId="Entity.FormatId" HandleChange="FormatChange" ></AutoSelectBase>
+            <AutoSelectBase TEntity="Guild" Title="Guild" BoundValue="@Entity!.Guild" BoundValueId="Entity.GuildId" HandleChange="GuildChange"></AutoSelectBase>
+            <AutoSelectBase TEntity="MtgCard" Title="Commander" BoundValue="@Entity!.Card" BoundValueId="Entity.MtgCardId" HandleChange="CommanderChange"></AutoSelectBase>
+        </MudPaper>
+        <MudPaper Class="pa-4">
+            <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "decks"))">Save</MudButton>
+            <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
+            <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("decks"))">Cancel</MudButton>
+        </MudPaper>
+    </MudForm>
+</AuthorizeView>
