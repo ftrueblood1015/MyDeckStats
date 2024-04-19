@@ -1,12 +1,13 @@
 ﻿@using MyDeckStats.Domain.Entities;
 @using MyDeckStats.Domain.Interfaces.Services;
+@using MyDeckStats.Shared;
 
 @typeparam TEntity where TEntity : EntityBase
 
 <MudGrid>
     <MudItem xs="12" sm="6" md="4">
-        <MudAutocomplete T="TEntity" Label="@Title" ValueChanged="value => EntityValueChanged(value)" 
-            Value="@BoundValue" SearchFunc="@Search" ToStringFunc=DisplayValue
+        <MudAutocomplete @attributes='Splats.AutoCompleteRequired(Title)' T="TEntity" Label="@Title" ValueChanged="value => EntityValueChanged(value)"
+                         Value="@BoundValue" SearchFunc="@Search" ToStringFunc=DisplayValue
             AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
     </MudItem>
 </MudGrid>

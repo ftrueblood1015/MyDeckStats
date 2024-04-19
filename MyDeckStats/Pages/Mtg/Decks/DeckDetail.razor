@@ -3,22 +3,33 @@
 
 @using MyDeckStats.Domain.Entities.Mtg.Decks;
 @using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Pages.Mtg.DeckCards;
 @using MyDeckStats.Pages.Shared;
 
 @inherits TrackableDetailPageBase<Deck>;
 
 <AuthorizeView>
-    <MudForm @ref="Form" @bind-IsValid="@success">
-        <MudPaper Class="pa-4">
-            <EntityBaseForm Entity="@Entity"></EntityBaseForm>
-            <AutoSelectBase TEntity="Format" Title="Format" BoundValue="@Entity!.Format" BoundValueId="Entity.FormatId" HandleChange="FormatChange" ></AutoSelectBase>
-            <AutoSelectBase TEntity="Guild" Title="Guild" BoundValue="@Entity!.Guild" BoundValueId="Entity.GuildId" HandleChange="GuildChange"></AutoSelectBase>
-            <AutoSelectBase TEntity="MtgCard" Title="Commander" BoundValue="@Entity!.Card" BoundValueId="Entity.MtgCardId" HandleChange="CommanderChange"></AutoSelectBase>
-        </MudPaper>
-        <MudPaper Class="pa-4">
-            <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "decks"))">Save</MudButton>
-            <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
-            <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("decks"))">Cancel</MudButton>
-        </MudPaper>
-    </MudForm>
+    <MudGrid>
+        <MudItem xs="12" md="6" lg="6">
+            <MudForm @ref="Form" @bind-IsValid="@success">
+                <MudPaper Class="pa-4">
+                    <EntityBaseForm Entity="@Entity"></EntityBaseForm>
+                    <AutoSelectBase TEntity="Format" Title="Format" BoundValue="@Entity!.Format" BoundValueId="Entity.FormatId" HandleChange="FormatChange"></AutoSelectBase>
+                    <AutoSelectBase TEntity="Guild" Title="Guild" BoundValue="@Entity!.Guild" BoundValueId="Entity.GuildId" HandleChange="GuildChange"></AutoSelectBase>
+                    <AutoSelectBase TEntity="MtgCard" Title="Commander" BoundValue="@Entity!.Card" BoundValueId="Entity.MtgCardId" HandleChange="CommanderChange"></AutoSelectBase>
+                </MudPaper>
+                <MudPaper Class="pa-4">
+                    <MudButton @attributes="Splats.NewButton()" OnClick="@(() => Save(Entity!, "decks"))">Save</MudButton>
+                    <MudButton @attributes="Splats.ResetButton()" OnClick="@(()=>Form!.ResetAsync())" Class="mx-2">Reset</MudButton>
+                    <MudButton @attributes="Splats.CancelButton()" OnClick="@(() => Cancel("decks"))">Cancel</MudButton>
+                </MudPaper>
+            </MudForm>
+        </MudItem>
+        @if (displayBreakDowns)
+        {
+            <MudItem xs="12" md="6" lg="6">
+                <DeckCardAddComponent DeckId="Entity!.Id" Username="@Username"></DeckCardAddComponent>
+            </MudItem>
+        }
+    </MudGrid>
 </AuthorizeView>

@@ -1,0 +1,37 @@
+﻿@using MyDeckStats.Pages.Shared;
+@using MyDeckStats.Domain.Entities.Mtg.Cards;
+@using MyDeckStats.Domain.Entities.Mtg.Decks;
+
+<MudForm @ref="DeckCardForm" @bind-IsValid="@success">
+    <MudPaper Class="pa-4">
+        <MudGrid>
+            <MudItem xs="12" md="12" lg="12">
+                <AutoSelectBase TEntity="MtgCard" Title="Card" BoundValue="@DeckCard!.MtgCard" BoundValueId="DeckCard.MtgCardId" HandleChange="CardChange" ></AutoSelectBase>
+            </MudItem>
+            <MudItem xs="6" md="6" lg="6">
+                <MudNumericField @bind-Value="@DeckCard!.Amount" @attributes='Splats.NumericRequired("Amount")' />
+            </MudItem>
+            <MudItem xs="6" md="6" lg="6">
+                <MudButton @attributes="Splats.NewButton()" OnClick="@(() => AddDeckcard())" Class="mt-3">Save</MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+</MudForm>
+
+<MudDataGrid @attributes='Splats.DataGrid("DeckCards")' T="DeckCard" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+             Filterable="true" >
+    <Columns>
+        <PropertyColumn Property="x => x.Name" Title="Name" Sortable="false" Filterable="false" />
+        <PropertyColumn Property="x => x.Amount" />
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudButton @attributes="Splats.DeleteButton()" Size="@Size.Small" OnClick="@(() => OnDeleteClicked(context.Item))">Remove</MudButton>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="DeckCard" />
+    </PagerContent>
+</MudDataGrid>

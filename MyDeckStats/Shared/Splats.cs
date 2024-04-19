@@ -15,7 +15,7 @@ namespace MyDeckStats.Shared
                 { "RequiredError", $"{label} is required." },
                 { "ResetValueOnEmptyText", true },
                 { "CoerceText", true },
-                { "CoerceValue", true },
+                { "CoerceValue", true }
             };
 
             return attributes;

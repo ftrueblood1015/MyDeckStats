@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.IdentityModel.Tokens;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Entities.Mtg.Decks;
@@ -16,10 +17,16 @@ namespace MyDeckStats.Pages.Mtg.Decks
 
         public Deck? Entity { get; set; } = new Deck();
 
+        public bool displayBreakDowns = false;
+
+        public string? Username { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             username = (await AuthStat).User.Identity.Name;
+            Username = (await AuthStat).User.Identity.Name; // needed to pass into child components
             Entity = await SetEntity();
+            displayBreakDowns = Entity.Id == Guid.Empty ? false : true;
         }
 
         public async Task<Deck> SetEntity()
