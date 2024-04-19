@@ -1,0 +1,16 @@
+﻿@using MyDeckStats.Domain.Models;
+
+<MudPaper Class="pa-4">
+    <MudText @attributes='Splats.PageHeader("KeywordStats")'>Keyword Summary</MudText>
+
+    <MudDataGrid @attributes='Splats.DataGrid("KeywordStats")' T="KeywordStat" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+                 Filterable="true">
+        <Columns>
+            <PropertyColumn Property="x => x.Keyword" Title="Keyword" Sortable="false" Filterable="false" />
+            <PropertyColumn Property="x => x.Count" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="KeywordStat" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>

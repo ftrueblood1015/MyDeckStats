@@ -5,13 +5,14 @@
 @using MyDeckStats.Domain.Entities.Mtg.Cards;
 @using MyDeckStats.Pages.Mtg.DeckCards;
 @using MyDeckStats.Pages.Mtg.CmcChartComponents;
+@using MyDeckStats.Pages.Mtg.KeywordStatComponents;
 @using MyDeckStats.Pages.Shared;
 
 @inherits TrackableDetailPageBase<Deck>;
 
 <AuthorizeView>
     <MudGrid>
-        <MudItem xs="12" md="6" lg="6">
+        <MudItem xs="12" md="12" lg="12">
             <MudForm @ref="Form" @bind-IsValid="@success">
                 <MudPaper Class="pa-4">
                     <EntityBaseForm Entity="@Entity"></EntityBaseForm>
@@ -28,11 +29,14 @@
         </MudItem>
         @if (displayBreakDowns)
         {
-            <MudItem xs="12" md="6" lg="6">
+            <MudItem xs="12" md="12" lg="12">
                 <DeckCardAddComponent DeckId="Entity!.Id" Username="@Username"></DeckCardAddComponent>
             </MudItem>
-            <MudItem xs="12" md="6" lg="6">
+            <MudItem xs="12" md="12" lg="12">
                 <CmcChartComponent DeckId="Entity!.Id" Username="@Username"></CmcChartComponent>
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12">
+                <KeywordStatComponent DeckId="Entity!.Id" Username="@Username"></KeywordStatComponent>
             </MudItem>
         }
     </MudGrid>

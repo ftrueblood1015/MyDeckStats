@@ -3,6 +3,7 @@
 @using MyDeckStats.Domain.Entities.Mtg.Decks;
 
 <MudForm @ref="DeckCardForm" @bind-IsValid="@success">
+    <MudText @attributes='Splats.PageHeader("DeckCards")'>Add And Remove Cards</MudText>
     <MudPaper Class="pa-4">
         <MudGrid>
             <MudItem xs="12" md="12" lg="12">

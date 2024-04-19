@@ -1,4 +1,5 @@
-﻿using MudBlazor;
+﻿using Microsoft.Build.Framework;
+using MudBlazor;
 using MyDeckStats.Domain.Entities.Mtg.Decks;
 using MyDeckStats.Domain.Interfaces.Repositories.Mtg;
 using MyDeckStats.Domain.Interfaces.Services.Mtg;
@@ -8,8 +9,11 @@ namespace MyDeckStats.Services.Mtg
 {
     public class DeckCardService : TrackableServiceBase<DeckCard, IDeckCardRepository>, IDeckCardService
     {
-        public DeckCardService(IDeckCardRepository repo) : base(repo)
+        private readonly IMtgKeywordService MtgKeywordService;
+
+        public DeckCardService(IDeckCardRepository repo, IMtgKeywordService mtgKeywordService) : base(repo)
         {
+            MtgKeywordService = mtgKeywordService;
         }
 
         public CmcChart GetCmCChartData(Guid DeckId, string username)
@@ -22,7 +26,7 @@ namespace MyDeckStats.Services.Mtg
             var data = new List<double>();
 
             var deckCards = Filter(x => x.DeckId == DeckId, username);
-            deckCards = deckCards.Where(c => !c.MtgCard!.Type!.Contains("Basic Land"));
+            deckCards = deckCards.Where(c => !c.MtgCard!.Type!.ToLower().Contains("basic land"));
 
             int minCmc = deckCards.Min(x => x.MtgCard!.ConvertedManaCost);
             int maxCmc = deckCards.Max(x => x.MtgCard!.ConvertedManaCost);
@@ -48,6 +52,37 @@ namespace MyDeckStats.Services.Mtg
             result.ChartType = ChartType.Line;
 
             return result;
+        }
+
+        public IEnumerable<KeywordStat> GetKeywordStatistics(Guid DeckId, string username)
+        {
+            var results = new List<KeywordStat>();
+
+            var deckCards = Filter(x => x.DeckId == DeckId, username).ToList();
+
+            foreach (var card in deckCards)
+            {
+                var keyWords = MtgKeywordService.Filter(x => x.MtgCardId == card.MtgCardId).ToList();
+
+                foreach (var keyWord in keyWords)
+                {
+                    bool exists = results.Where(x => x.Keyword == keyWord.Name).Any();
+                    if (exists)
+                    {
+                        var existing = results.Find(x => x.Keyword == keyWord.Name);
+                        if (existing != null)
+                        {
+                            existing.Count += 1;
+                        }
+                    }
+                    else
+                    {
+                        results.Add(new KeywordStat() { Keyword = keyWord.Name, Count = 1 });
+                    }
+                }
+            }
+
+            return results;
         }
     }
 }

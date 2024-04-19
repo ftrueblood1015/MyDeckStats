@@ -3,7 +3,6 @@ using MudBlazor;
 using MyDeckStats.Domain.Entities.Mtg.Cards;
 using MyDeckStats.Domain.Entities.Mtg.Decks;
 using MyDeckStats.Domain.Interfaces.Services.Mtg;
-using static MudBlazor.CategoryTypes;
 
 namespace MyDeckStats.Pages.Mtg.DeckCards
 {
