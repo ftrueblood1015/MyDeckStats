@@ -50,7 +50,7 @@ namespace MyDeckStats.Pages.Mtg.DeckCards
 
             if (DeckId != Guid.Empty)
             {
-                var Response = DeckCardService.GetAll(Username);
+                var Response = DeckCardService.Filter(x => x.DeckId == DeckId, Username);
                 Entities = Response != null ? Response.ToList() : new List<DeckCard>();
                 StateHasChanged();
             }
