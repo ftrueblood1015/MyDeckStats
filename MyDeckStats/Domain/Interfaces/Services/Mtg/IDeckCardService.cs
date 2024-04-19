@@ -7,5 +7,6 @@ namespace MyDeckStats.Domain.Interfaces.Services.Mtg
     {
         CmcChart GetCmCChartData(Guid DeckId, string username);
         IEnumerable<KeywordStat> GetKeywordStatistics(Guid DeckId, string username);
+        IEnumerable<PurposeStat> GetPurposeStatistics(Guid DeckId, string username);
     }
 }

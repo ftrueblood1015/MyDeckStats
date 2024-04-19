@@ -1,0 +1,16 @@
+﻿@using MyDeckStats.Domain.Models;
+
+<MudPaper Class="pa-4">
+    <MudText @attributes='Splats.PageHeader("PurposeStats")'>Purpose Summary</MudText>
+
+    <MudDataGrid @attributes='Splats.DataGrid("PurposeStats")' T="PurposeStat" MultiSelection="true" Items="Entities" SortMode="SortMode.Multiple"
+                 Filterable="true">
+        <Columns>
+            <PropertyColumn Property="x => x.Purpose" Title="Purpose" Sortable="false" Filterable="false" />
+            <PropertyColumn Property="x => x.Count" />
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="PurposeStat" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>

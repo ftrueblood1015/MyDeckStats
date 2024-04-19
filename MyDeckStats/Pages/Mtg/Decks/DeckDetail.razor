@@ -6,6 +6,7 @@
 @using MyDeckStats.Pages.Mtg.DeckCards;
 @using MyDeckStats.Pages.Mtg.CmcChartComponents;
 @using MyDeckStats.Pages.Mtg.KeywordStatComponents;
+@using MyDeckStats.Pages.Mtg.PurposeStatComponents;
 @using MyDeckStats.Pages.Shared;
 
 @inherits TrackableDetailPageBase<Deck>;
@@ -37,6 +38,9 @@
             </MudItem>
             <MudItem xs="12" md="12" lg="12">
                 <KeywordStatComponent DeckId="Entity!.Id" Username="@Username"></KeywordStatComponent>
+            </MudItem>
+            <MudItem xs="12" md="12" lg="12">
+                <PurposeStatsComponent DeckId="Entity!.Id" Username="@Username"></PurposeStatsComponent>
             </MudItem>
         }
     </MudGrid>

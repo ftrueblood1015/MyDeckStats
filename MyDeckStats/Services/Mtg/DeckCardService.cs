@@ -10,10 +10,12 @@ namespace MyDeckStats.Services.Mtg
     public class DeckCardService : TrackableServiceBase<DeckCard, IDeckCardRepository>, IDeckCardService
     {
         private readonly IMtgKeywordService MtgKeywordService;
+        private readonly ICardPurposeService MtgCardPurposeService;
 
-        public DeckCardService(IDeckCardRepository repo, IMtgKeywordService mtgKeywordService) : base(repo)
+        public DeckCardService(IDeckCardRepository repo, IMtgKeywordService mtgKeywordService, ICardPurposeService mtgCardPurposeService) : base(repo)
         {
             MtgKeywordService = mtgKeywordService;
+            MtgCardPurposeService = mtgCardPurposeService;
         }
 
         public CmcChart GetCmCChartData(Guid DeckId, string username)
@@ -78,6 +80,37 @@ namespace MyDeckStats.Services.Mtg
                     else
                     {
                         results.Add(new KeywordStat() { Keyword = keyWord.Name, Count = 1 });
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        public IEnumerable<PurposeStat> GetPurposeStatistics(Guid DeckId, string username)
+        {
+            var results = new List<PurposeStat>();
+
+            var deckCards = Filter(x => x.DeckId == DeckId, username).ToList();
+
+            foreach (var card in deckCards)
+            {
+                var purposes = MtgCardPurposeService.Filter(x => x.MtgCardId == card.MtgCardId).ToList();
+
+                foreach (var purpose in purposes)
+                {
+                    bool exists = results.Where(x => x.Purpose == purpose.Name).Any();
+                    if (exists)
+                    {
+                        var existing = results.Find(x => x.Purpose == purpose.Name);
+                        if (existing != null)
+                        {
+                            existing.Count += 1;
+                        }
+                    }
+                    else
+                    {
+                        results.Add(new PurposeStat() { Purpose = purpose.Name, Count = 1 });
                     }
                 }
             }
